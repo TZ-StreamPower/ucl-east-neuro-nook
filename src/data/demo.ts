@@ -17,7 +17,7 @@ export type ChoiceId = "continue" | "map" | "calm";
 export const CHOICES: { id: ChoiceId; label: string; full: string; feedback: string }[] = [
   { id: "continue", label: "Continue", full: "Continue on my route", feedback: "Keep the next landmark in view. You can pause and check it at any point." },
   { id: "map", label: "Check map", full: "Pause and check the map", feedback: "You can review the next landmark before deciding when to continue." },
-  { id: "calm", label: "Find a calmer spot", full: "Look for a calmer place to stop", feedback: "You can take a moment to get your bearings and check the overview when you are ready." },
+  { id: "calm", label: "Pause", full: "Look for a calmer place to stop", feedback: "You can take a moment to get your bearings and check the overview when you are ready." },
 ];
 export const SEED_QUESTION = {
   id: "seed-1",

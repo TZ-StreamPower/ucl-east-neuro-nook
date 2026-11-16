@@ -3,7 +3,7 @@ import { useState } from "react";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import { Shell, Heading, primaryBtn, textLink } from "@/components/Shell";
 import { Scene } from "@/components/scenes/Scene";
-import { ROUTE } from "@/data/demo";
+import { ROUTE, LANDMARKS } from "@/data/demo";
 import { useStore } from "@/lib/store";
 import { nextStep, prevStep } from "@/lib/logic";
 const head = (t: string, d: string) => () => ({ meta: [{ title: t }, { name: "description", content: d }, { property: "og:title", content: t }, { property: "og:description", content: d }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] });
@@ -28,10 +28,15 @@ function Steps() {
   );
   return (
     <Shell back="/route/preview" backLabel="To Marshgate">
-      <Scene kind={st.scene} />
-      <p className="text-muted-foreground">Step {i + 1} of {ROUTE.steps.length}</p>
+      <figure className="space-y-1">
+        <Scene kind={st.scene === "segment" ? "bridge" : st.scene} />
+        <figcaption className="text-sm font-bold text-primary">Landmark · {LANDMARKS[st.landmark].name}</figcaption>
+      </figure>
+      <div className="flex items-center gap-3"><p className="text-muted-foreground">Step {i + 1} of {ROUTE.steps.length}</p>
+        <div className="flex flex-1 gap-1" aria-hidden="true">{ROUTE.steps.map((_, n) => <span key={n} className={`h-1.5 flex-1 rounded-full ${n <= i ? "bg-primary" : "bg-border"}`} />)}</div></div>
       <Heading key={i}>{st.title}</Heading>
       <p>{st.text}</p>
+      <p className="text-sm text-muted-foreground">{LANDMARKS[st.landmark].cue}</p>
       {last ? <button className={primaryBtn} onClick={() => { s.set({ step: null }); setDone(true); }}>Finish route <ArrowRight className="size-4" /></button>
         : <button className={primaryBtn} onClick={() => s.set({ step: nextStep(i, ROUTE.steps.length) })}>Next step <ArrowRight className="size-4" /></button>}
       {i > 0 && <button className={textLink} onClick={() => s.set({ step: prevStep(i) })}><ArrowLeft className="size-4" /> Previous step</button>}

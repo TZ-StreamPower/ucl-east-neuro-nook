@@ -5,7 +5,8 @@ import { Shell, Heading, primaryBtn } from "@/components/Shell";
 import { Scene } from "@/components/scenes/Scene";
 import { PLACES } from "@/data/demo";
 const head = (t: string, d: string) => () => ({ meta: [{ title: t }, { name: "description", content: d }, { property: "og:title", content: t }, { property: "og:description", content: d }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] });
-export const Route = createFileRoute("/route/")({ head: head("Choose your route · UCL East Community", "Pick where you start and where you are going."), component: Picker });
+export const Route = createFileRoute("/route/")({
+  validateSearch: (q: Record<string, unknown>) => ({ to: typeof q["to"] === "string" ? q["to"] : undefined }), head: head("Choose your route · UCL East Community", "Pick where you start and where you are going."), component: Picker });
 function Field({ label, value, onChange, kind }: { label: string; value: string; onChange: (v: string) => void; kind: "station" | "entrance" }) {
   const [q, setQ] = useState("");
   const opts = PLACES.filter((p) => p.toLowerCase().includes(q.toLowerCase()));
@@ -24,14 +25,15 @@ function Field({ label, value, onChange, kind }: { label: string; value: string;
   );
 }
 function Picker() {
-  const [from, setFrom] = useState("Stratford Station"); const [to, setTo] = useState("Marshgate");
+  const pre = Route.useSearch().to;
+  const [from, setFrom] = useState(""); const [to, setTo] = useState(pre ?? "");
   const ok = from === "Stratford Station" && to === "Marshgate";
   return (
-    <Shell back="/" backLabel="Find my way">
+    <Shell back={pre ? "/place/marshgate" : "/"} backLabel="Find my way">
       <Heading>Choose your route</Heading>
       <Field label="From" value={from} onChange={setFrom} kind="station" />
       <Field label="To" value={to} onChange={setTo} kind="entrance" />
-      {!ok && <p className="text-muted-foreground">This prototype supports Stratford Station to Marshgate only.</p>}
+      {!ok && from && to && <p className="text-muted-foreground">This prototype supports Stratford Station to Marshgate only.</p>}
       {ok ? <Link to="/route/preview" className={primaryBtn}>Preview route <ArrowRight className="size-4" /></Link>
         : <button disabled className={primaryBtn}>Preview route <ArrowRight className="size-4" /></button>}
     </Shell>
