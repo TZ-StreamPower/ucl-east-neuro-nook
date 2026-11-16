@@ -19,7 +19,7 @@ export function filterResults(items: ResultItem[], q: string, cat: Cat | "all") 
 export type BrowseView = "list" | "map";
 export const switchView = <S extends { view: BrowseView }>(s: S, view: BrowseView): S => ({ ...s, view });
 
-export type SavedRef = { kind: "place" | "route"; id: string };
+export type SavedRef = { kind: "place" | "route" | "post"; id: string };
 export const isSaved = (list: SavedRef[], r: SavedRef) => list.some((x) => x.kind === r.kind && x.id === r.id);
 export const toggleSaved = (list: SavedRef[], r: SavedRef) => (isSaved(list, r) ? list.filter((x) => !(x.kind === r.kind && x.id === r.id)) : [...list, r]);
 

@@ -15,8 +15,11 @@ import { Route as SavedRouteImport } from './routes/saved'
 import { Route as CommunityIndexRouteImport } from './routes/community.index'
 import { Route as CommunityIdRouteImport } from './routes/community.$id'
 import { Route as CommunityNewRouteImport } from './routes/community.new'
+import { Route as PlaceIdRouteImport } from './routes/place.$id'
+import { Route as RouteIdRouteImport } from './routes/route.$id'
 import { Route as RoutePreviewRouteImport } from './routes/route.preview'
 import { Route as RouteStepsRouteImport } from './routes/route.steps'
+import { Route as RouteIdStepsRouteImport } from './routes/route.$id_.steps'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -48,6 +51,16 @@ const CommunityNewRoute = CommunityNewRouteImport.update({
   path: '/community/new',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlaceIdRoute = PlaceIdRouteImport.update({
+  id: '/place/$id',
+  path: '/place/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RouteIdRoute = RouteIdRouteImport.update({
+  id: '/route/$id',
+  path: '/route/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RoutePreviewRoute = RoutePreviewRouteImport.update({
   id: '/route/preview',
   path: '/route/preview',
@@ -58,6 +71,11 @@ const RouteStepsRoute = RouteStepsRouteImport.update({
   path: '/route/steps',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RouteIdStepsRoute = RouteIdStepsRouteImport.update({
+  id: '/route/$id_/steps',
+  path: '/route/$id/steps',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -65,9 +83,12 @@ export interface FileRoutesByFullPath {
   '/saved': typeof SavedRoute
   '/community/$id': typeof CommunityIdRoute
   '/community/new': typeof CommunityNewRoute
+  '/place/$id': typeof PlaceIdRoute
+  '/route/$id': typeof RouteIdRoute
   '/route/preview': typeof RoutePreviewRoute
   '/route/steps': typeof RouteStepsRoute
   '/community/': typeof CommunityIndexRoute
+  '/route/$id/steps': typeof RouteIdStepsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -75,9 +96,12 @@ export interface FileRoutesByTo {
   '/saved': typeof SavedRoute
   '/community/$id': typeof CommunityIdRoute
   '/community/new': typeof CommunityNewRoute
+  '/place/$id': typeof PlaceIdRoute
+  '/route/$id': typeof RouteIdRoute
   '/route/preview': typeof RoutePreviewRoute
   '/route/steps': typeof RouteStepsRoute
   '/community': typeof CommunityIndexRoute
+  '/route/$id/steps': typeof RouteIdStepsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -86,9 +110,12 @@ export interface FileRoutesById {
   '/saved': typeof SavedRoute
   '/community/$id': typeof CommunityIdRoute
   '/community/new': typeof CommunityNewRoute
+  '/place/$id': typeof PlaceIdRoute
+  '/route/$id': typeof RouteIdRoute
   '/route/preview': typeof RoutePreviewRoute
   '/route/steps': typeof RouteStepsRoute
   '/community/': typeof CommunityIndexRoute
+  '/route/$id_/steps': typeof RouteIdStepsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -98,9 +125,12 @@ export interface FileRouteTypes {
     | '/saved'
     | '/community/$id'
     | '/community/new'
+    | '/place/$id'
+    | '/route/$id'
     | '/route/preview'
     | '/route/steps'
     | '/community/'
+    | '/route/$id/steps'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -108,9 +138,12 @@ export interface FileRouteTypes {
     | '/saved'
     | '/community/$id'
     | '/community/new'
+    | '/place/$id'
+    | '/route/$id'
     | '/route/preview'
     | '/route/steps'
     | '/community'
+    | '/route/$id/steps'
   id:
     | '__root__'
     | '/'
@@ -118,9 +151,12 @@ export interface FileRouteTypes {
     | '/saved'
     | '/community/$id'
     | '/community/new'
+    | '/place/$id'
+    | '/route/$id'
     | '/route/preview'
     | '/route/steps'
     | '/community/'
+    | '/route/$id_/steps'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -129,9 +165,12 @@ export interface RootRouteChildren {
   SavedRoute: typeof SavedRoute
   CommunityIdRoute: typeof CommunityIdRoute
   CommunityNewRoute: typeof CommunityNewRoute
+  PlaceIdRoute: typeof PlaceIdRoute
+  RouteIdRoute: typeof RouteIdRoute
   RoutePreviewRoute: typeof RoutePreviewRoute
   RouteStepsRoute: typeof RouteStepsRoute
   CommunityIndexRoute: typeof CommunityIndexRoute
+  RouteIdStepsRoute: typeof RouteIdStepsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -178,6 +217,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommunityNewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/place/$id': {
+      id: '/place/$id'
+      path: '/place/$id'
+      fullPath: '/place/$id'
+      preLoaderRoute: typeof PlaceIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/route/$id': {
+      id: '/route/$id'
+      path: '/route/$id'
+      fullPath: '/route/$id'
+      preLoaderRoute: typeof RouteIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/route/preview': {
       id: '/route/preview'
       path: '/route/preview'
@@ -192,6 +245,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RouteStepsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/route/$id_/steps': {
+      id: '/route/$id_/steps'
+      path: '/route/$id/steps'
+      fullPath: '/route/$id/steps'
+      preLoaderRoute: typeof RouteIdStepsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -201,9 +261,12 @@ const rootRouteChildren: RootRouteChildren = {
   SavedRoute: SavedRoute,
   CommunityIdRoute: CommunityIdRoute,
   CommunityNewRoute: CommunityNewRoute,
+  PlaceIdRoute: PlaceIdRoute,
+  RouteIdRoute: RouteIdRoute,
   RoutePreviewRoute: RoutePreviewRoute,
   RouteStepsRoute: RouteStepsRoute,
   CommunityIndexRoute: CommunityIndexRoute,
+  RouteIdStepsRoute: RouteIdStepsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
