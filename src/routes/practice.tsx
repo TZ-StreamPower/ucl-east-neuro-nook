@@ -7,7 +7,7 @@ import { useStore } from "@/lib/store";
 import { practiceExitTarget } from "@/lib/logic";
 const head = (t: string, d: string) => () => ({ meta: [{ title: t }, { name: "description", content: d }, { property: "og:title", content: t }, { property: "og:description", content: d }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] });
 export const Route = createFileRoute("/practice")({
-  validateSearch: (q: Record<string, unknown>) => ({ from: q.from === "preview" ? ("preview" as const) : ("home" as const) }), head: head("Campus Practice · Leaving the station", "An optional, text-first practice of your first arrival."), component: Practice });
+  validateSearch: (q: Record<string, unknown>) => ({ from: q['from'] === "preview" ? ("preview" as const) : ("home" as const) }), head: head("Campus Practice · Leaving the station", "An optional, text-first practice of your first arrival."), component: Practice });
 const sceneFor = { continue: "segment", map: "route", calm: "home" } as const;
 function Practice() {
   const s = useStore(); const nav = useNavigate(); const { from } = Route.useSearch();

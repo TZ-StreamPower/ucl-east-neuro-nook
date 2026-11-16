@@ -6,7 +6,7 @@ import { SEED_QUESTION, SEED_TIP } from "@/data/demo";
 import { useStore } from "@/lib/store";
 const head = (t: string, d: string) => () => ({ meta: [{ title: t }, { name: "description", content: d }, { property: "og:title", content: t }, { property: "og:description", content: d }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] });
 export const Route = createFileRoute("/community/")({
-  validateSearch: (s: Record<string, unknown>) => ({ thread: typeof s.thread === "string" ? s.thread : undefined }),
+  validateSearch: (s: Record<string, unknown>) => ({ thread: typeof s['thread'] === "string" ? s['thread'] : undefined }),
   head: head("Community · UCL East", "Demo questions and tips linked to campus routes."), component: Community });
 function Community() {
   const s = useStore(); const { thread } = Route.useSearch();
