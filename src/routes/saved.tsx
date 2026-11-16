@@ -17,7 +17,7 @@ function Saved() {
           <Link to="/route/preview" className={primaryBtn}>Open route <ArrowRight className="size-4" /></Link>
           <button className={textLink} onClick={() => s.set({ saved: false })}>Remove</button>
         </div>
-      ) : (<><p>No saved routes yet</p><Link to="/route" className={primaryBtn}>Find a route <ArrowRight className="size-4" /></Link></>)}
+      ) : (<><p>No saved routes yet</p><Link to="/route" search={{ to: undefined }} className={primaryBtn}>Find a route <ArrowRight className="size-4" /></Link></>)}
     </Shell>
   );
 }

@@ -13,7 +13,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PracticeRouteImport } from './routes/practice'
 import { Route as SavedRouteImport } from './routes/saved'
 import { Route as CommunityIndexRouteImport } from './routes/community.index'
+import { Route as CommunityIdRouteImport } from './routes/community.$id'
 import { Route as CommunityNewRouteImport } from './routes/community.new'
+import { Route as PlaceMarshgateRouteImport } from './routes/place.marshgate'
 import { Route as RouteIndexRouteImport } from './routes/route.index'
 import { Route as RouteHelpRouteImport } from './routes/route.help'
 import { Route as RoutePreviewRouteImport } from './routes/route.preview'
@@ -39,9 +41,19 @@ const CommunityIndexRoute = CommunityIndexRouteImport.update({
   path: '/community/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CommunityIdRoute = CommunityIdRouteImport.update({
+  id: '/community/$id',
+  path: '/community/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CommunityNewRoute = CommunityNewRouteImport.update({
   id: '/community/new',
   path: '/community/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlaceMarshgateRoute = PlaceMarshgateRouteImport.update({
+  id: '/place/marshgate',
+  path: '/place/marshgate',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RouteIndexRoute = RouteIndexRouteImport.update({
@@ -69,7 +81,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/practice': typeof PracticeRoute
   '/saved': typeof SavedRoute
+  '/community/$id': typeof CommunityIdRoute
   '/community/new': typeof CommunityNewRoute
+  '/place/marshgate': typeof PlaceMarshgateRoute
   '/route/help': typeof RouteHelpRoute
   '/route/preview': typeof RoutePreviewRoute
   '/route/steps': typeof RouteStepsRoute
@@ -80,7 +94,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/practice': typeof PracticeRoute
   '/saved': typeof SavedRoute
+  '/community/$id': typeof CommunityIdRoute
   '/community/new': typeof CommunityNewRoute
+  '/place/marshgate': typeof PlaceMarshgateRoute
   '/route/help': typeof RouteHelpRoute
   '/route/preview': typeof RoutePreviewRoute
   '/route/steps': typeof RouteStepsRoute
@@ -92,7 +108,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/practice': typeof PracticeRoute
   '/saved': typeof SavedRoute
+  '/community/$id': typeof CommunityIdRoute
   '/community/new': typeof CommunityNewRoute
+  '/place/marshgate': typeof PlaceMarshgateRoute
   '/route/help': typeof RouteHelpRoute
   '/route/preview': typeof RoutePreviewRoute
   '/route/steps': typeof RouteStepsRoute
@@ -105,7 +123,9 @@ export interface FileRouteTypes {
     | '/'
     | '/practice'
     | '/saved'
+    | '/community/$id'
     | '/community/new'
+    | '/place/marshgate'
     | '/route/help'
     | '/route/preview'
     | '/route/steps'
@@ -116,7 +136,9 @@ export interface FileRouteTypes {
     | '/'
     | '/practice'
     | '/saved'
+    | '/community/$id'
     | '/community/new'
+    | '/place/marshgate'
     | '/route/help'
     | '/route/preview'
     | '/route/steps'
@@ -127,7 +149,9 @@ export interface FileRouteTypes {
     | '/'
     | '/practice'
     | '/saved'
+    | '/community/$id'
     | '/community/new'
+    | '/place/marshgate'
     | '/route/help'
     | '/route/preview'
     | '/route/steps'
@@ -139,7 +163,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PracticeRoute: typeof PracticeRoute
   SavedRoute: typeof SavedRoute
+  CommunityIdRoute: typeof CommunityIdRoute
   CommunityNewRoute: typeof CommunityNewRoute
+  PlaceMarshgateRoute: typeof PlaceMarshgateRoute
   RouteHelpRoute: typeof RouteHelpRoute
   RoutePreviewRoute: typeof RoutePreviewRoute
   RouteStepsRoute: typeof RouteStepsRoute
@@ -177,11 +203,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommunityIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/community/$id': {
+      id: '/community/$id'
+      path: '/community/$id'
+      fullPath: '/community/$id'
+      preLoaderRoute: typeof CommunityIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/community/new': {
       id: '/community/new'
       path: '/community/new'
       fullPath: '/community/new'
       preLoaderRoute: typeof CommunityNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/place/marshgate': {
+      id: '/place/marshgate'
+      path: '/place/marshgate'
+      fullPath: '/place/marshgate'
+      preLoaderRoute: typeof PlaceMarshgateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/route/': {
@@ -219,7 +259,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PracticeRoute: PracticeRoute,
   SavedRoute: SavedRoute,
+  CommunityIdRoute: CommunityIdRoute,
   CommunityNewRoute: CommunityNewRoute,
+  PlaceMarshgateRoute: PlaceMarshgateRoute,
   RouteHelpRoute: RouteHelpRoute,
   RoutePreviewRoute: RoutePreviewRoute,
   RouteStepsRoute: RouteStepsRoute,

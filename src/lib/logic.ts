@@ -11,3 +11,9 @@ export function addQuestion(list: Question[], text: string, routeId: string, id:
 export function parseJSON<T>(raw: string | null, fallback: T): T {
   try { return raw ? (JSON.parse(raw) as T) : fallback; } catch { return fallback; }
 }
+export type ThreadFrom = "feed" | "preview" | "place";
+export function threadBack(f: ThreadFrom) {
+  return f === "preview" ? { to: "/route/preview", label: "Route preview" } as const
+    : f === "place" ? { to: "/place/marshgate", label: "Marshgate" } as const
+    : { to: "/community", label: "Community" } as const;
+}
