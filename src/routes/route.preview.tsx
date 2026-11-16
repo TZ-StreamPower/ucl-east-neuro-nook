@@ -19,10 +19,10 @@ function Preview() {
         {ROUTE.steps.map((st, i) => (
           <button key={i} aria-label={`Landmark ${i + 1}: ${st.title}`} aria-pressed={pin === i} onClick={() => setPin(i)}
             className={`absolute size-11 -translate-x-1/2 -translate-y-1/2 rounded-full ${pin === i ? "ring-[3px] ring-brand" : ""}`}
-            style={{ left: `${[70,140,215][i] / 3}%`, top: `${[140,95,135][i] / 2}%` }} />
+            style={{ left: `${[70,140,215][i]! / 3}%`, top: `${[140,95,135][i]! / 2}%` }} />
         ))}
       </div>
-      {pin !== null && <p className="rounded-lg bg-accent p-3"><b>{pin + 1}.</b> {ROUTE.steps[pin].title}</p>}
+      {pin !== null && <p className="rounded-lg bg-accent p-3"><b>{pin + 1}.</b> {ROUTE.steps[pin]!.title}</p>}
       <Link to="/route/steps" className={primaryBtn}>{s.step !== null ? "Resume steps" : "View steps"} <ArrowRight className="size-4" /></Link>
       <Link to="/practice" onClick={() => s.set({ origin: "preview", stage: 1 })} className={secondaryBtn}>Practise this arrival · optional <ArrowRight className="size-4" /></Link>
       <div>

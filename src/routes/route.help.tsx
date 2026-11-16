@@ -10,7 +10,7 @@ function Help() {
   return (
     <Shell back="/route/steps" backLabel="Current step">
       <Heading>Get help</Heading>
-      <p>You are on step {i + 1}: {ROUTE.steps[i].title}.</p>
+      <p>You are on step {i + 1}: {ROUTE.steps[i]!.title}.</p>
       <h2 className="font-bold text-primary">All steps</h2>
       <ol className="list-decimal space-y-1 pl-5">{ROUTE.steps.map((x) => <li key={x.title}>{x.title}</li>)}</ol>
       <a href={VISIT_US} target="_blank" rel="noreferrer" className={secondaryBtn}>Campus support information <ArrowRight className="size-4" /></a>

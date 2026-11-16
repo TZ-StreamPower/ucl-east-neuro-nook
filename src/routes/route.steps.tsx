@@ -10,7 +10,7 @@ const head = (t: string, d: string) => () => ({ meta: [{ title: t }, { name: "de
 export const Route = createFileRoute("/route/steps")({ head: head("Route steps · To Marshgate", "One step at a time from Stratford Station to Marshgate."), component: Steps });
 function Steps() {
   const s = useStore(); const [all, setAll] = useState(false); const [done, setDone] = useState(false);
-  const i = s.step ?? 0; const st = ROUTE.steps[i]; const last = i === ROUTE.steps.length - 1;
+  const i = s.step ?? 0; const st = ROUTE.steps[i]!; const last = i === ROUTE.steps.length - 1;
   if (done) return (
     <Shell back="/route/preview" backLabel="To Marshgate">
       <Scene kind="entrance" />

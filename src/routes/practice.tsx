@@ -36,7 +36,7 @@ function Practice() {
       </div>
     </Shell>
   );
-  const c = CHOICES.find((x) => x.id === s.choice) ?? CHOICES[0];
+  const c = CHOICES.find((x) => x.id === s.choice) ?? CHOICES[0]!;
   return (
     <Shell {...back}>
       <Heading display>Take a moment</Heading>
