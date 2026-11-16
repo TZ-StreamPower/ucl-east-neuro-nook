@@ -32,3 +32,4 @@ use the editor.
 ## Project rules
 - Prototype state lives in `src/lib/store.tsx` (localStorage for saved/published, sessionStorage for step/draft/practice); pure rules in `src/lib/logic.ts` with tests — keeps logic testable without a backend.
 - Scene art is inline SVG in `src/components/scenes` so landmarks are reused between guide and Practice.
+- Route search params use `zodValidator` + `fallback` so every key stays optional for links; narrow values inside the component.
