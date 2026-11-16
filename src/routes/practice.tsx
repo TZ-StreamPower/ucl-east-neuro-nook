@@ -1,3 +1,5 @@
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import { z } from "zod";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, ArrowUp, ExternalLink, ChevronLeft } from "lucide-react";
 import { Shell, Heading, backCls, primaryBtn, secondaryBtn, textLink } from "@/components/Shell";
@@ -7,11 +9,11 @@ import { useStore } from "@/lib/store";
 import { practiceExit, type PracticeFrom } from "@/lib/logic";
 import { pageHead } from "@/lib/head";
 export const Route = createFileRoute("/practice")({
-  validateSearch: (q: { from?: string; route?: string }) => ({ from: (q.from === "route" ? "route" : "home") as PracticeFrom, route: findRoute(q.route ?? "") ? q.route! : DEFAULT_ROUTE }),
+  validateSearch: zodValidator(z.object({ from: fallback(z.string(), "home").default("home"), route: fallback(z.string(), DEFAULT_ROUTE).default(DEFAULT_ROUTE) })),
   head: pageHead("Campus Practice · Leaving the station", "An optional practice of your first arrival."), component: Practice });
 const STAGES = ["Exploration", "Decision-making", "Support and feedback"];
 function Practice() {
-  const s = useStore(); const nav = useNavigate(); const { from, route } = Route.useSearch(); const r = findRoute(route)!;
+  const s = useStore(); const nav = useNavigate(); const q = Route.useSearch(); const from: PracticeFrom = q.from === "route" ? "route" : "home"; const route = findRoute(q.route) ? q.route : DEFAULT_ROUTE; const r = findRoute(route)!;
   const ex = practiceExit(from, route);
   const exitLink = (cls: string, label: string, icon?: boolean) => ex.kind === "route"
     ? <Link to="/route/$id" params={{ id: ex.id }} className={cls}>{icon && <ChevronLeft className="size-4" />}{label}</Link>

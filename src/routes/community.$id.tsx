@@ -1,3 +1,5 @@
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import { z } from "zod";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowRight, ChevronLeft, MapPin } from "lucide-react";
@@ -9,10 +11,10 @@ import { allPosts } from "@/lib/posts";
 import { pageHead } from "@/lib/head";
 import { SaveShare } from "@/components/SaveShare";
 export const Route = createFileRoute("/community/$id")({
-  validateSearch: (q: { from?: string; ref?: string }) => ({ from: (["route", "place"].includes(q.from as string) ? q.from : "feed") as ThreadFrom, ref: typeof q.ref === "string" ? q.ref : undefined }),
+  validateSearch: zodValidator(z.object({ from: fallback(z.string(), "feed").default("feed"), ref: fallback(z.string().optional(), undefined) })),
   head: pageHead("Discussion · UCL East Community", "A demo place- or route-linked discussion."), component: ThreadPage });
 function ThreadPage() {
-  const { id } = Route.useParams(); const { from, ref } = Route.useSearch(); const s = useStore();
+  const { id } = Route.useParams(); const { from: f, ref } = Route.useSearch(); const from: ThreadFrom = f === "route" || f === "place" ? f : "feed"; const s = useStore();
   const [mode, setMode] = useState<"idle" | "edit" | "preview">("idle"); const [text, setText] = useState(""); const [confirm, setConfirm] = useState(false); const [err, setErr] = useState(false);
   const t = allPosts(s.questions).find((p) => p.id === id);
   const b = threadBack(from, ref);

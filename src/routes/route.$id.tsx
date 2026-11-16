@@ -1,3 +1,5 @@
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import { z } from "zod";
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowRight, ChevronLeft, Footprints, MessageCircle } from "lucide-react";
@@ -14,11 +16,11 @@ import { pageHead } from "@/lib/head";
 type Tab = "overview" | "expect" | "community";
 const TABS: { id: Tab; l: string }[] = [{ id: "overview", l: "Overview" }, { id: "expect", l: "What to expect" }, { id: "community", l: "Community" }];
 export const Route = createFileRoute("/route/$id")({
-  validateSearch: (q: { tab?: string }) => ({ tab: (["expect", "community"].includes(q.tab as string) ? q.tab : "overview") as Tab }),
+  validateSearch: zodValidator(z.object({ tab: fallback(z.string(), "overview").default("overview") })),
   loader: ({ params }) => { const r = findRoute(params.id); if (!r) throw notFound(); return r; },
   head: pageHead("Route preview · UCL East Community", "Example campus route with landmarks, what to expect and discussion."), component: Preview });
 function Preview() {
-  const r = Route.useLoaderData(); const { tab } = Route.useSearch(); const s = useStore(); const nav = useNavigate();
+  const r = Route.useLoaderData(); const raw = Route.useSearch().tab; const tab: Tab = raw === "expect" || raw === "community" ? raw : "overview"; const s = useStore(); const nav = useNavigate();
   const [pin, setPin] = useState<number | null>(null);
   const resume = s.steps[r.id] !== undefined;
   const posts = allPosts(s.questions).filter((p) => p.routeId === r.id);

@@ -1,3 +1,5 @@
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import { z } from "zod";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Search, List, Map as MapIcon, X, ArrowRight, Footprints } from "lucide-react";
 import { Shell, textLink } from "@/components/Shell";
@@ -13,12 +15,7 @@ const ALL: ResultItem[] = [
 ];
 const catIds = ["all", ...CATS.map((c) => c.id)];
 export const Route = createFileRoute("/")({
-  validateSearch: (q: { q?: string; cat?: string; view?: string; sel?: string }) => ({
-    q: typeof q.q === "string" ? q.q : "",
-    cat: (catIds.includes(q.cat as string) ? q.cat : "all") as Cat | "all",
-    view: (q.view === "map" ? "map" : "list") as BrowseView,
-    sel: typeof q.sel === "string" ? q.sel : undefined,
-  }),
+  validateSearch: zodValidator(z.object({ q: fallback(z.string(), "").default(""), cat: fallback(z.string(), "all").default("all"), view: fallback(z.string(), "list").default("list"), sel: fallback(z.string().optional(), undefined) })),
   head: pageHead("Campus · UCL East Community", "Search places and routes around UCL East."), component: Browse });
 
 function ItemLink({ i, className, children }: { i: ResultItem; className: string; children: React.ReactNode }) {
@@ -28,8 +25,8 @@ function ItemLink({ i, className, children }: { i: ResultItem; className: string
 }
 
 function Browse() {
-  const s = Route.useSearch(); const nav = useNavigate({ from: "/" }); const store = useStore();
-  const upd = (p: Partial<typeof s>) => nav({ search: (prev) => ({ ...prev, ...p }), replace: true });
+  const raw = Route.useSearch(); const s = { ...raw, cat: (catIds.includes(raw.cat) ? raw.cat : "all") as Cat | "all", view: (raw.view === "map" ? "map" : "list") as BrowseView }; const nav = useNavigate({ from: "/" }); const store = useStore();
+  const upd = (p: Partial<typeof raw>) => nav({ search: (prev) => ({ ...prev, ...p }), replace: true });
   const results = filterResults(ALL, s.q, s.cat);
   const sel = results.find((r) => `${r.kind}:${r.id}` === s.sel);
   return (
@@ -52,7 +49,7 @@ function Browse() {
         <p className="text-sm text-muted-foreground" role="status">{results.length} {results.length === 1 ? "result" : "results"}</p>
         <div role="group" aria-label="View" className="flex rounded-full border border-border p-0.5">
           {(["list", "map"] as const).map((v) => { const I = v === "list" ? List : MapIcon; return (
-            <button key={v} aria-pressed={s.view === v} onClick={() => nav({ search: (p) => switchView(p, v), replace: true })}
+            <button key={v} aria-pressed={s.view === v} onClick={() => nav({ search: (p) => switchView({ ...p, view: p.view as BrowseView }, v), replace: true })}
               className={`inline-flex min-h-10 items-center gap-1 rounded-full px-3 text-sm font-bold ${s.view === v ? "bg-primary text-primary-foreground" : "text-primary"}`}><I className="size-4" />{v === "list" ? "List" : "Map"}</button>); })}
         </div>
       </div>

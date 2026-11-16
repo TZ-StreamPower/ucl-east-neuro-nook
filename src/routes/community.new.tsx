@@ -1,3 +1,5 @@
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import { z } from "zod";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowRight, ChevronLeft } from "lucide-react";
@@ -8,10 +10,10 @@ import { canPublish } from "@/lib/logic";
 import { pageHead } from "@/lib/head";
 type From = "feed" | "practice" | "route";
 export const Route = createFileRoute("/community/new")({
-  validateSearch: (q: { from?: string; route?: string }) => ({ from: (["practice", "route"].includes(q.from as string) ? q.from : "feed") as From, route: findRoute(q.route ?? "") ? q.route! : DEFAULT_ROUTE }),
+  validateSearch: zodValidator(z.object({ from: fallback(z.string(), "feed").default("feed"), route: fallback(z.string(), DEFAULT_ROUTE).default(DEFAULT_ROUTE) })),
   head: pageHead("Write a question · UCL East Community", "Ask a route-linked question in this demo."), component: Composer });
 function Composer() {
-  const s = useStore(); const nav = useNavigate(); const { from, route: initial } = Route.useSearch();
+  const s = useStore(); const nav = useNavigate(); const q = Route.useSearch(); const from: From = q.from === "practice" || q.from === "route" ? q.from : "feed"; const initial = findRoute(q.route) ? q.route : DEFAULT_ROUTE;
   const [route, setRoute] = useState(initial); const r = findRoute(route)!;
   const [preview, setPreview] = useState(false); const [err, setErr] = useState(false); const [confirm, setConfirm] = useState(false);
   const back = from === "feed" ? <Link to="/community" className={backCls}><ChevronLeft className="size-4" />Community</Link>

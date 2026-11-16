@@ -22,7 +22,7 @@ describe("practice and threads", () => {
   it("thread from feed returns to feed", () => expect(threadBack("feed")).toEqual({ kind: "feed" }));
 });
 describe("steps and publish", () => {
-  it("step progress is kept per route and cleared on finish", () => { const m = setStep({}, "r", 2); expect(m.r).toBe(2); expect(clearStep(m, "r").r).toBeUndefined(); });
+  it("step progress is kept per route and cleared on finish", () => { const m = setStep({}, "r", 2); expect(m['r']).toBe(2); expect(clearStep(m, "r")["r"]).toBeUndefined(); });
   it("steps clamp within 3", () => { expect(nextStep(2, 3)).toBe(2); expect(prevStep(0)).toBe(0); });
   it("blank question cannot publish", () => { expect(canPublish("   ")).toBe(false); expect(addQuestion([], " ", "r", "1")).toHaveLength(0); });
   it("publishing adds one question", () => expect(addQuestion([], "Hi?", "r", "1")).toHaveLength(1));
