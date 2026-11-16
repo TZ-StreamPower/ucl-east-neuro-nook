@@ -1,34 +1,47 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import { z } from "zod";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowRight } from "lucide-react";
-import { Shell, Heading, primaryBtn, textLink } from "@/components/Shell";
+import { ArrowRight, ChevronLeft } from "lucide-react";
+import { Shell, Heading, Sheet, backCls, primaryBtn, textLink } from "@/components/Shell";
+import { ROUTES, DEFAULT_ROUTE, findRoute } from "@/data/demo";
 import { useStore } from "@/lib/store";
 import { canPublish } from "@/lib/logic";
-const head = (t: string, d: string) => () => ({ meta: [{ title: t }, { name: "description", content: d }, { property: "og:title", content: t }, { property: "og:description", content: d }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] });
+import { pageHead } from "@/lib/head";
+type From = "feed" | "practice" | "route";
 export const Route = createFileRoute("/community/new")({
-  validateSearch: (q: Record<string, unknown>) => ({ from: q["from"] === "practice" ? ("practice" as const) : ("feed" as const) }), head: head("Write a question · UCL East Community", "Ask a route-linked question in this demo."), component: Composer });
+  validateSearch: zodValidator(z.object({ from: fallback(z.string(), "feed").default("feed"), route: fallback(z.string(), DEFAULT_ROUTE).default(DEFAULT_ROUTE) })),
+  head: pageHead("Write a question · UCL East Community", "Ask a route-linked question in this demo."), component: Composer });
 function Composer() {
-  const s = useStore(); const nav = useNavigate(); const { from } = Route.useSearch();
-  const backTo = from === "practice" ? "/route/preview" : "/community"; const [preview, setPreview] = useState(false); const [err, setErr] = useState(false);
-  if (preview) return (
-    <Shell back={backTo} backLabel={from === "practice" ? "Route preview" : "Community"}>
-      <Heading>Preview question</Heading>
-      <p className="text-sm text-muted-foreground">Stratford Station → Marshgate</p>
-      <p className="rounded-lg bg-accent p-3">{s.draft}</p>
-      <p>Audience · This prototype only</p>
-      <button className={primaryBtn} onClick={() => { s.publish(s.draft); nav({ to: "/community" }); }}>Publish demo question <ArrowRight className="size-4" /></button>
-      <button className={textLink} onClick={() => setPreview(false)}>Edit question</button>
-    </Shell>
-  );
+  const s = useStore(); const nav = useNavigate(); const q = Route.useSearch(); const from: From = q.from === "practice" || q.from === "route" ? q.from : "feed"; const initial = findRoute(q.route) ? q.route : DEFAULT_ROUTE;
+  const [route, setRoute] = useState(initial); const r = findRoute(route)!;
+  const [preview, setPreview] = useState(false); const [err, setErr] = useState(false); const [confirm, setConfirm] = useState(false);
+  const back = from === "feed" ? <Link to="/community" className={backCls}><ChevronLeft className="size-4" />Community</Link>
+    : <Link to="/route/$id" params={{ id: initial }} search={{ tab: from === "route" ? "community" : "overview" }} className={backCls}><ChevronLeft className="size-4" />Route preview</Link>;
+  const publish = () => { const id = s.publish(s.draft, route); nav({ to: "/community/$id", params: { id }, search: from === "feed" ? { from: "feed" } : { from: "route", ref: route } }); };
   return (
-    <Shell back={backTo} backLabel={from === "practice" ? "Route preview" : "Community"}>
-      <Heading>Write a question</Heading>
-      <p className="text-muted-foreground">Route · Stratford Station → Marshgate</p>
-      <label className="font-bold text-primary" htmlFor="q">Your question</label>
-      <textarea id="q" rows={4} value={s.draft} onChange={(e) => { s.set({ draft: e.target.value }); setErr(false); }} aria-invalid={err} aria-describedby={err ? "qerr" : undefined} className="rounded-lg border border-input p-3" />
-      {err && <p id="qerr" className="text-destructive">Write a question before previewing.</p>}
-      <p className="text-muted-foreground">Audience · This prototype only</p>
-      <button className={primaryBtn} onClick={() => canPublish(s.draft) ? setPreview(true) : setErr(true)}>Preview question <ArrowRight className="size-4" /></button>
+    <Shell back={back}>
+      <Heading key={preview ? "p" : "e"}>{preview ? "Preview question" : "Write a question"}</Heading>
+      {preview ? (<>
+        <p className="text-sm text-muted-foreground">Route · {r.name}</p>
+        <p className="rounded-lg border-2 border-dashed border-brand p-3">{s.draft}</p>
+        <p className="text-sm">Audience · This prototype only</p>
+        <button className={primaryBtn} onClick={() => setConfirm(true)}>Publish demo question <ArrowRight className="size-4" /></button>
+        <button className={textLink} onClick={() => setPreview(false)}>Edit question</button>
+      </>) : (<>
+        <label className="font-bold text-primary" htmlFor="rt">Linked route</label>
+        <select id="rt" value={route} onChange={(e) => setRoute(e.target.value)} className="min-h-12 rounded-lg border border-input bg-background px-3">{ROUTES.map((x) => <option key={x.id} value={x.id}>{x.name}</option>)}</select>
+        <label className="font-bold text-primary" htmlFor="q">Your question</label>
+        <textarea id="q" rows={4} value={s.draft} onChange={(e) => { s.set({ draft: e.target.value }); setErr(false); }} aria-invalid={err} aria-describedby={err ? "qerr" : undefined} className="rounded-lg border border-input p-3" />
+        {err && <p id="qerr" className="text-destructive">Write a question before previewing.</p>}
+        <p className="text-sm text-muted-foreground">Audience · This prototype only</p>
+        <button className={primaryBtn} onClick={() => canPublish(s.draft) ? setPreview(true) : setErr(true)}>Preview question <ArrowRight className="size-4" /></button>
+      </>)}
+      {confirm && <Sheet title="Publish this question?" onClose={() => setConfirm(false)}>
+        <p>It will be added to the {r.name} discussion in this prototype only.</p>
+        <button className={primaryBtn} onClick={publish}>Confirm and publish <ArrowRight className="size-4" /></button>
+        <button className={textLink} onClick={() => setConfirm(false)}>Not yet</button>
+      </Sheet>}
     </Shell>
   );
 }

@@ -1,23 +1,31 @@
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import { z } from "zod";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowRight, ArrowUp, ExternalLink } from "lucide-react";
-import { Shell, Heading, primaryBtn, secondaryBtn, textLink } from "@/components/Shell";
+import { ArrowRight, ArrowUp, ExternalLink, ChevronLeft } from "lucide-react";
+import { Shell, Heading, backCls, primaryBtn, secondaryBtn, textLink } from "@/components/Shell";
 import { PracticeScene } from "@/components/scenes/Scene";
-import { CHOICES, PRACTICE_SITUATION, STARTER_DRAFT, GAME_URL, ILLUSTRATIVE } from "@/data/demo";
+import { CHOICES, PRACTICE_SITUATION, STARTER_DRAFT, GAME_URL, ILLUSTRATIVE, DEFAULT_ROUTE, findRoute } from "@/data/demo";
 import { useStore } from "@/lib/store";
-import { practiceExitTarget } from "@/lib/logic";
-const head = (t: string, d: string) => () => ({ meta: [{ title: t }, { name: "description", content: d }, { property: "og:title", content: t }, { property: "og:description", content: d }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] });
+import { practiceExit, type PracticeFrom } from "@/lib/logic";
+import { pageHead } from "@/lib/head";
 export const Route = createFileRoute("/practice")({
-  validateSearch: (q: Record<string, unknown>) => ({ from: q['from'] === "preview" ? ("preview" as const) : ("home" as const) }),
-  head: head("Campus Practice · Leaving the station", "An optional practice of your first arrival."), component: Practice });
+  validateSearch: zodValidator(z.object({ from: fallback(z.string(), "home").default("home"), route: fallback(z.string(), DEFAULT_ROUTE).default(DEFAULT_ROUTE) })),
+  head: pageHead("Campus Practice · Leaving the station", "An optional practice of your first arrival."), component: Practice });
+const STAGES = ["Exploration", "Decision-making", "Support and feedback"];
 function Practice() {
-  const s = useStore(); const nav = useNavigate(); const { from } = Route.useSearch();
-  const exit = <Link to={practiceExitTarget(from)} className={textLink}>Exit practice</Link>;
-  const shell = { back: practiceExitTarget(from), backLabel: "Campus Practice", practice: true, footer: exit };
+  const s = useStore(); const nav = useNavigate(); const q = Route.useSearch(); const from: PracticeFrom = q.from === "route" ? "route" : "home"; const route = findRoute(q.route) ? q.route : DEFAULT_ROUTE; const r = findRoute(route)!;
+  const ex = practiceExit(from, route);
+  const exitLink = (cls: string, label: string, icon?: boolean) => ex.kind === "route"
+    ? <Link to="/route/$id" params={{ id: ex.id }} className={cls}>{icon && <ChevronLeft className="size-4" />}{label}</Link>
+    : <Link to="/" className={cls}>{icon && <ChevronLeft className="size-4" />}{label}</Link>;
+  const shell = { back: exitLink(backCls, "Exit practice", true), practice: true, footer: <div className="bg-practice">{exitLink(textLink, "Exit practice")}</div> };
+  const stageBar = <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Campus Practice · {r.to} · {s.stage} of 3 · {STAGES[s.stage - 1]}</p>;
   if (s.stage === 1) return (
     <Shell {...shell}>
+      {stageBar}
       <Heading display>Leaving the station</Heading>
       <PracticeScene choice={null} />
-      <p className="text-lg">The exit feels busy. The footbridge is your next landmark.</p>
+      <p className="text-lg">The exit feels busy. Your next landmark is {r.steps[1]!.landmark.name.toLowerCase()}.</p>
       <button className={primaryBtn} onClick={() => s.set({ stage: 2 })}>Explore choices <ArrowRight className="size-4" /></button>
       <a href={GAME_URL} target="_blank" rel="noreferrer" className={textLink}>Open full game <ExternalLink className="size-4" /></a>
       <p className="text-sm text-muted-foreground">{ILLUSTRATIVE}</p>
@@ -26,12 +34,13 @@ function Practice() {
   const c = s.stage === 3 ? CHOICES.find((x) => x.id === s.choice) : undefined;
   return (
     <Shell {...shell}>
+      {stageBar}
       <Heading display key={c ? "fb" : "q"}>{c ? "Take a moment" : "What would you do?"}</Heading>
       <PracticeScene choice={c ? c.id : null} />
       {c ? (<>
         <p className="text-lg" role="status">{c.feedback}</p>
-        <Link to="/route/preview" className={primaryBtn}>Back to route <ArrowUp className="size-4" /></Link>
-        <button className={secondaryBtn} onClick={() => { s.set({ draft: s.draft || STARTER_DRAFT }); nav({ to: "/community/new", search: { from: "practice" } }); }}>Ask the community <ArrowRight className="size-4" /></button>
+        <Link to="/route/$id" params={{ id: route }} className={primaryBtn}>Back to route <ArrowUp className="size-4" /></Link>
+        <button className={secondaryBtn} onClick={() => { s.set({ draft: s.draft || STARTER_DRAFT }); nav({ to: "/community/new", search: { from: "practice", route } }); }}>Ask the community <ArrowRight className="size-4" /></button>
         <button className={textLink} onClick={() => s.set({ stage: 2 })}>Back to choices</button>
       </>) : (<>
         <p>{PRACTICE_SITUATION}</p>
@@ -43,6 +52,7 @@ function Practice() {
             </button>
           ))}
         </div>
+        <a href={GAME_URL} target="_blank" rel="noreferrer" className={textLink}>Open full game <ExternalLink className="size-4" /></a>
       </>)}
     </Shell>
   );

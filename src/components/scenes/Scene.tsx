@@ -1,5 +1,5 @@
 // Schematic isometric scenes. Decorative; text equivalents live outside.
-import type { ChoiceId, LandmarkId } from "@/data/demo";
+import type { ChoiceId } from "@/data/demo";
 type Kind = "home" | "station" | "segment" | "entrance" | "route" | "bridge";
 const INK = "#361A54", HI = "#9A3BFF";
 function Building({ x, y, tone }: { x: number; y: number; tone: "lilac" | "terra" }) {
@@ -33,7 +33,6 @@ function Ground() {
 }
 const Pin = ({ cx, cy, hi }: { cx: number; cy: number; hi?: boolean }) => <circle cx={cx} cy={cy} r={hi ? 10 : 7} fill={hi ? HI : INK} stroke="#fff" strokeWidth="2" />;
 
-export const MAP_PINS: Record<LandmarkId, [number, number]> = { station: [70, 140], bridge: [140, 95], entrance: [215, 135] };
 
 export function Scene({ kind, className = "" }: { kind: Kind; className?: string }) {
   return (
