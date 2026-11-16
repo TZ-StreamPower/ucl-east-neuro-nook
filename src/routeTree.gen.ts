@@ -10,33 +10,141 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PracticeRouteImport } from './routes/practice'
+import { Route as SavedRouteImport } from './routes/saved'
+import { Route as CommunityIndexRouteImport } from './routes/community.index'
+import { Route as CommunityNewRouteImport } from './routes/community.new'
+import { Route as RouteIndexRouteImport } from './routes/route.index'
+import { Route as RouteHelpRouteImport } from './routes/route.help'
+import { Route as RoutePreviewRouteImport } from './routes/route.preview'
+import { Route as RouteStepsRouteImport } from './routes/route.steps'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PracticeRoute = PracticeRouteImport.update({
+  id: '/practice',
+  path: '/practice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SavedRoute = SavedRouteImport.update({
+  id: '/saved',
+  path: '/saved',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommunityIndexRoute = CommunityIndexRouteImport.update({
+  id: '/community/',
+  path: '/community/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommunityNewRoute = CommunityNewRouteImport.update({
+  id: '/community/new',
+  path: '/community/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RouteIndexRoute = RouteIndexRouteImport.update({
+  id: '/route/',
+  path: '/route/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RouteHelpRoute = RouteHelpRouteImport.update({
+  id: '/route/help',
+  path: '/route/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoutePreviewRoute = RoutePreviewRouteImport.update({
+  id: '/route/preview',
+  path: '/route/preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RouteStepsRoute = RouteStepsRouteImport.update({
+  id: '/route/steps',
+  path: '/route/steps',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/practice': typeof PracticeRoute
+  '/saved': typeof SavedRoute
+  '/community/new': typeof CommunityNewRoute
+  '/route/help': typeof RouteHelpRoute
+  '/route/preview': typeof RoutePreviewRoute
+  '/route/steps': typeof RouteStepsRoute
+  '/community/': typeof CommunityIndexRoute
+  '/route/': typeof RouteIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/practice': typeof PracticeRoute
+  '/saved': typeof SavedRoute
+  '/community/new': typeof CommunityNewRoute
+  '/route/help': typeof RouteHelpRoute
+  '/route/preview': typeof RoutePreviewRoute
+  '/route/steps': typeof RouteStepsRoute
+  '/community': typeof CommunityIndexRoute
+  '/route': typeof RouteIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/practice': typeof PracticeRoute
+  '/saved': typeof SavedRoute
+  '/community/new': typeof CommunityNewRoute
+  '/route/help': typeof RouteHelpRoute
+  '/route/preview': typeof RoutePreviewRoute
+  '/route/steps': typeof RouteStepsRoute
+  '/community/': typeof CommunityIndexRoute
+  '/route/': typeof RouteIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/practice'
+    | '/saved'
+    | '/community/new'
+    | '/route/help'
+    | '/route/preview'
+    | '/route/steps'
+    | '/community/'
+    | '/route/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/practice'
+    | '/saved'
+    | '/community/new'
+    | '/route/help'
+    | '/route/preview'
+    | '/route/steps'
+    | '/community'
+    | '/route'
+  id:
+    | '__root__'
+    | '/'
+    | '/practice'
+    | '/saved'
+    | '/community/new'
+    | '/route/help'
+    | '/route/preview'
+    | '/route/steps'
+    | '/community/'
+    | '/route/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PracticeRoute: typeof PracticeRoute
+  SavedRoute: typeof SavedRoute
+  CommunityNewRoute: typeof CommunityNewRoute
+  RouteHelpRoute: typeof RouteHelpRoute
+  RoutePreviewRoute: typeof RoutePreviewRoute
+  RouteStepsRoute: typeof RouteStepsRoute
+  CommunityIndexRoute: typeof CommunityIndexRoute
+  RouteIndexRoute: typeof RouteIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +156,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/practice': {
+      id: '/practice'
+      path: '/practice'
+      fullPath: '/practice'
+      preLoaderRoute: typeof PracticeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/saved': {
+      id: '/saved'
+      path: '/saved'
+      fullPath: '/saved'
+      preLoaderRoute: typeof SavedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/community/': {
+      id: '/community/'
+      path: '/community'
+      fullPath: '/community/'
+      preLoaderRoute: typeof CommunityIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/community/new': {
+      id: '/community/new'
+      path: '/community/new'
+      fullPath: '/community/new'
+      preLoaderRoute: typeof CommunityNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/route/': {
+      id: '/route/'
+      path: '/route'
+      fullPath: '/route/'
+      preLoaderRoute: typeof RouteIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/route/help': {
+      id: '/route/help'
+      path: '/route/help'
+      fullPath: '/route/help'
+      preLoaderRoute: typeof RouteHelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/route/preview': {
+      id: '/route/preview'
+      path: '/route/preview'
+      fullPath: '/route/preview'
+      preLoaderRoute: typeof RoutePreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/route/steps': {
+      id: '/route/steps'
+      path: '/route/steps'
+      fullPath: '/route/steps'
+      preLoaderRoute: typeof RouteStepsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PracticeRoute: PracticeRoute,
+  SavedRoute: SavedRoute,
+  CommunityNewRoute: CommunityNewRoute,
+  RouteHelpRoute: RouteHelpRoute,
+  RoutePreviewRoute: RoutePreviewRoute,
+  RouteStepsRoute: RouteStepsRoute,
+  CommunityIndexRoute: CommunityIndexRoute,
+  RouteIndexRoute: RouteIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
