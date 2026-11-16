@@ -26,7 +26,7 @@ function Preview() {
         {ids.map((id, i) => { const [x, y] = MAP_PINS[id]; return (
           <button key={id} aria-label={`Stop ${i + 1}: ${LANDMARKS[id].name}`} aria-pressed={pin === id}
             onClick={(e) => { trigger.current = e.currentTarget; setPin(id); }}
-            className={`absolute flex min-h-11 -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full bg-primary px-2.5 text-xs font-bold text-primary-foreground ${pin === id ? "ring-[3px] ring-brand" : ""}`}
+            className={`absolute flex min-h-11 min-w-11 justify-center whitespace-nowrap -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full bg-primary px-2.5 text-xs font-bold text-primary-foreground ${pin === id ? "ring-[3px] ring-brand" : ""}`}
             style={{ left: `${x / 3}%`, top: `${y / 2}%` }}>{i + 1} <span className="max-[359px]:sr-only">{LANDMARKS[id].name}</span></button>); })}
       </div>
       <p className="text-sm text-muted-foreground">Tap a stop for its landmark. {ILLUSTRATIVE}.</p>
