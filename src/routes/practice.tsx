@@ -6,12 +6,13 @@ import { CHOICES, PRACTICE_SITUATION, STARTER_DRAFT, GAME_URL } from "@/data/dem
 import { useStore } from "@/lib/store";
 import { practiceExitTarget } from "@/lib/logic";
 const head = (t: string, d: string) => () => ({ meta: [{ title: t }, { name: "description", content: d }, { property: "og:title", content: t }, { property: "og:description", content: d }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] });
-export const Route = createFileRoute("/practice")({ head: head("Campus Practice · Leaving the station", "An optional, text-first practice of your first arrival."), component: Practice });
+export const Route = createFileRoute("/practice")({
+  validateSearch: (q: Record<string, unknown>) => ({ from: q.from === "preview" ? ("preview" as const) : ("home" as const) }), head: head("Campus Practice · Leaving the station", "An optional, text-first practice of your first arrival."), component: Practice });
 const sceneFor = { continue: "segment", map: "route", calm: "home" } as const;
 function Practice() {
-  const s = useStore(); const nav = useNavigate();
-  const exit = <Link to={practiceExitTarget(s.origin)} className={textLink}>Exit practice</Link>;
-  const back = { back: practiceExitTarget(s.origin), backLabel: "Campus Practice", practice: true, footer: exit };
+  const s = useStore(); const nav = useNavigate(); const { from } = Route.useSearch();
+  const exit = <Link to={practiceExitTarget(from)} className={textLink}>Exit practice</Link>;
+  const back = { back: practiceExitTarget(from), backLabel: "Campus Practice", practice: true, footer: exit };
   if (s.stage === 1) return (
     <Shell {...back}>
       <Heading display>Leaving the station</Heading>

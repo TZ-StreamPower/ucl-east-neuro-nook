@@ -24,7 +24,7 @@ function Preview() {
       </div>
       {pin !== null && <p className="rounded-lg bg-accent p-3"><b>{pin + 1}.</b> {ROUTE.steps[pin]!.title}</p>}
       <Link to="/route/steps" className={primaryBtn}>{s.step !== null ? "Resume steps" : "View steps"} <ArrowRight className="size-4" /></Link>
-      <Link to="/practice" onClick={() => s.set({ origin: "preview", stage: 1 })} className={secondaryBtn}>Practise this arrival · optional <ArrowRight className="size-4" /></Link>
+      <Link to="/practice" search={{ from: "preview" }} onClick={() => s.set({ stage: 1 })} className={secondaryBtn}>Practise this arrival · optional <ArrowRight className="size-4" /></Link>
       <div>
         <button aria-expanded={open} onClick={() => setOpen(!open)} className={textLink}>What to expect {open ? <Minus className="size-4" /> : <Plus className="size-4" />}</button>
         {open && <div className="space-y-2 pb-2"><p>{EXPECT}</p><a href={VISIT_US} target="_blank" rel="noreferrer" className="font-bold text-primary underline">Official UCL East Visit Us page</a></div>}
