@@ -8,7 +8,8 @@ import { MapCanvas, MapPin } from "@/components/Browse";
 import { SaveShare } from "@/components/SaveShare";
 import { ExpectRows } from "@/components/ExpectRows";
 import { PostCard } from "@/components/PostCard";
-import { findRoute, ILLUSTRATIVE, VISIT_US } from "@/data/demo";
+import { findRoute, ILLUSTRATIVE, VISIT_US , DEFAULT_ROUTE} from "@/data/demo";
+import { availableOffline } from "@/lib/logic";
 import { useStore } from "@/lib/store";
 import { allPosts, toCard } from "@/lib/posts";
 import { setStep } from "@/lib/logic";
@@ -33,6 +34,9 @@ function Preview() {
       <p className="-mt-2 text-xs text-muted-foreground">Tap a numbered stop for its landmark.</p>
       <div><Heading>{r.to}</Heading><p className="text-muted-foreground">From {r.from} · {r.minutes} min walk · <b>Example route</b></p></div>
       <SaveShare item={{ kind: "route", id: r.id }} />
+      {s.offline && !availableOffline(s.saved, { kind: "route", id: r.id }) && <div role="alert" className="retro space-y-1 rounded-xl p-3"><p className="font-bold text-primary">Couldn't load full route details</p><p className="text-sm">This route isn't saved, so it isn't available offline.</p><button className="font-bold text-brand underline" onClick={() => s.set({ offline: false })}>Retry</button></div>}
+      {r.id === DEFAULT_ROUTE && <div className="space-y-1 rounded-xl border-2 border-dashed border-cat-food p-3 text-sm"><p className="font-bold text-primary">Possible change: event day crowds</p><p>On West Ham match days the bridge path can be very busy. Alternative: the riverside path adds about 4 minutes.</p><p className="text-xs text-muted-foreground">Source: illustrative example · updated 17 Nov 2026</p></div>}
+      {s.prefs.routePref !== "none" && <p className="text-xs text-muted-foreground">Your preference: {s.prefs.routePref === "step-free" ? "step-free" : "fewer crowds"}. Not verified for this example route.</p>}
       <div role="tablist" aria-label="Route details" className="grid grid-cols-3 border-b border-border">
         {TABS.map((t) => (
           <Link key={t.id} role="tab" aria-selected={tab === t.id} to="/route/$id" params={{ id: r.id }} search={{ tab: t.id }} replace

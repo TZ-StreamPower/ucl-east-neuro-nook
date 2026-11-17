@@ -17,6 +17,8 @@ function Community() {
       <div role="group" aria-label="Filter posts" className="flex gap-2">
         {([["all", "All"], ["Question", "Questions"], ["Tip", "Tips"]] as const).map(([k, l]) => <button key={k} aria-pressed={kind === k} onClick={() => setKind(k)} className={pill}>{l}</button>)}
       </div>
+      {s.kept && <div className="retro space-y-1 rounded-2xl bg-accent p-3"><p className="text-xs font-bold uppercase text-muted-foreground">Kept draft · not published</p><p className="font-bold text-primary">{s.kept.text}</p>
+        <Link to="/community/new" search={{ from: "feed", route: s.kept.routeId }} onClick={() => s.set({ draft: s.kept!.text })} className="font-bold text-brand underline">Continue editing</Link></div>}
       <ul className="space-y-3">{posts.map((p) => <li key={p.id}><PostCard p={toCard(p, s.replies, p.id.startsWith("q-"))} from="feed" /></li>)}</ul>
       <Link to="/community/new" search={{ from: "feed" }} className={primaryBtn}>Write a question <ArrowRight className="size-4" /></Link>
     </Shell>
