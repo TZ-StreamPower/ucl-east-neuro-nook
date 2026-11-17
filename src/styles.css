@@ -186,3 +186,10 @@
   :focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 }
+
+/* Retro outline baseline: dark border + small hard shadow */
+@utility retro { border: 2px solid var(--primary); box-shadow: 3px 3px 0 0 var(--primary); }
+@utility pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 0px); }
+.reduce-motion *, .reduce-motion *::before, .reduce-motion *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { font-size: 16px; overflow-x: hidden; }
