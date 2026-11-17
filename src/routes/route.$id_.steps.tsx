@@ -47,6 +47,9 @@ function Steps() {
       </Sheet>}
       {sheet === "help" && <Sheet title="Get help" onClose={() => setSheet(null)}>
         <ul className="list-disc space-y-1 pl-5"><li>You can stop at any time. Your step is kept.</li><li>Ask staff at the Student Support desk in Marshgate reception.</li></ul>
+        <h3 className="font-bold text-primary">App not working?</h3>
+        <ul className="list-disc space-y-1 pl-5"><li>Connect to campus Wi-Fi (eduroam) inside Marshgate or One Pool Street.</li><li>IT Services help point: Marshgate reception.</li><li>Ask any staff member at a reception desk.</li><li>Message a friend or peer mentor you trust.</li></ul>
+        <p className="text-xs text-muted-foreground">Illustrative locations; support may not always be available.</p>
         <a href={VISIT_US} target="_blank" rel="noreferrer" className="font-bold text-primary underline">Official UCL East Visit Us page</a>
         <button className={primaryBtn} onClick={() => setSheet(null)}>Return to step {i + 1} <ArrowRight className="size-4" /></button>
       </Sheet>}

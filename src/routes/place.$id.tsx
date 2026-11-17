@@ -6,6 +6,7 @@ import { SaveShare } from "@/components/SaveShare";
 import { PostCard } from "@/components/PostCard";
 import { CATS, ROUTES, findPlace, ILLUSTRATIVE } from "@/data/demo";
 import { useStore } from "@/lib/store";
+import { visibleNotes } from "@/lib/logic";
 import { allPosts, toCard } from "@/lib/posts";
 import { pageHead } from "@/lib/head";
 export const Route = createFileRoute("/place/$id")({
@@ -21,8 +22,8 @@ function PlacePage() {
       <div className="flex items-start gap-3"><Thumb cat={p.cat} className="size-12" />
         <div><p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{CATS.find((c) => c.id === p.cat)!.label}</p><Heading>{p.name}</Heading><p className="text-muted-foreground">{p.sub}</p></div></div>
       <SaveShare item={{ kind: "place", id: p.id }} />
-      <section className="space-y-2"><h2 className="font-bold text-primary">Arrival information</h2>
-        <ul className="list-disc space-y-1 pl-5">{p.notes.map((n) => <li key={n}>{n}</li>)}</ul></section>
+      <section className="space-y-2"><h2 className="flex items-center gap-2 font-bold text-primary">Arrival information <span className="rounded-full bg-accent px-2 text-xs">Illustrative</span></h2>
+        <ul className="list-disc space-y-1 pl-5">{visibleNotes(p.notes, s.prefs.detail).map((n) => <li key={n}>{n}</li>)}</ul></section>
       <section className="space-y-2"><h2 className="font-bold text-primary">Plan a route</h2>
         {routes.length ? routes.map((r) => (
           <Link key={r.id} to="/route/$id" params={{ id: r.id }} className="flex items-center gap-3 rounded-2xl border border-border p-3 hover:border-brand">

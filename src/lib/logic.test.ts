@@ -27,3 +27,12 @@ describe("steps and publish", () => {
   it("blank question cannot publish", () => { expect(canPublish("   ")).toBe(false); expect(addQuestion([], " ", "r", "1")).toHaveLength(0); });
   it("publishing adds one question", () => expect(addQuestion([], "Hi?", "r", "1")).toHaveLength(1));
 });
+import { visibleNotes, keepDraft, toggleReport, availableOffline } from "./logic";
+describe("BRP states", () => {
+  it("short detail shows only first note", () => expect(visibleNotes(["a", "b"], "short")).toEqual(["a"]));
+  it("full detail shows all notes", () => expect(visibleNotes(["a", "b"], "full")).toEqual(["a", "b"]));
+  it("blank draft is not kept", () => expect(keepDraft("  ", "r")).toBeNull());
+  it("draft kept with its route", () => expect(keepDraft("Hi?", "r")).toEqual({ text: "Hi?", routeId: "r" }));
+  it("reporting twice counts once", () => expect(toggleReport(toggleReport([], "p"), "p")).toEqual(["p"]));
+  it("only saved items are available offline", () => { expect(availableOffline([{ kind: "route", id: "a" }], { kind: "route", id: "a" })).toBe(true); expect(availableOffline([], { kind: "route", id: "a" })).toBe(false); });
+});

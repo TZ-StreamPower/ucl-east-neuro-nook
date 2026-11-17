@@ -12,10 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PracticeRouteImport } from './routes/practice'
 import { Route as SavedRouteImport } from './routes/saved'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as CommunityIndexRouteImport } from './routes/community.index'
 import { Route as CommunityIdRouteImport } from './routes/community.$id'
 import { Route as CommunityNewRouteImport } from './routes/community.new'
 import { Route as PlaceIdRouteImport } from './routes/place.$id'
+import { Route as PracticeGameRouteImport } from './routes/practice_.game'
 import { Route as RouteIdRouteImport } from './routes/route.$id'
 import { Route as RoutePreviewRouteImport } from './routes/route.preview'
 import { Route as RouteStepsRouteImport } from './routes/route.steps'
@@ -36,6 +38,11 @@ const SavedRoute = SavedRouteImport.update({
   path: '/saved',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CommunityIndexRoute = CommunityIndexRouteImport.update({
   id: '/community/',
   path: '/community/',
@@ -54,6 +61,11 @@ const CommunityNewRoute = CommunityNewRouteImport.update({
 const PlaceIdRoute = PlaceIdRouteImport.update({
   id: '/place/$id',
   path: '/place/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PracticeGameRoute = PracticeGameRouteImport.update({
+  id: '/practice_/game',
+  path: '/practice/game',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RouteIdRoute = RouteIdRouteImport.update({
@@ -81,9 +93,11 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/practice': typeof PracticeRoute
   '/saved': typeof SavedRoute
+  '/settings': typeof SettingsRoute
   '/community/$id': typeof CommunityIdRoute
   '/community/new': typeof CommunityNewRoute
   '/place/$id': typeof PlaceIdRoute
+  '/practice/game': typeof PracticeGameRoute
   '/route/$id': typeof RouteIdRoute
   '/route/preview': typeof RoutePreviewRoute
   '/route/steps': typeof RouteStepsRoute
@@ -94,9 +108,11 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/practice': typeof PracticeRoute
   '/saved': typeof SavedRoute
+  '/settings': typeof SettingsRoute
   '/community/$id': typeof CommunityIdRoute
   '/community/new': typeof CommunityNewRoute
   '/place/$id': typeof PlaceIdRoute
+  '/practice/game': typeof PracticeGameRoute
   '/route/$id': typeof RouteIdRoute
   '/route/preview': typeof RoutePreviewRoute
   '/route/steps': typeof RouteStepsRoute
@@ -108,9 +124,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/practice': typeof PracticeRoute
   '/saved': typeof SavedRoute
+  '/settings': typeof SettingsRoute
   '/community/$id': typeof CommunityIdRoute
   '/community/new': typeof CommunityNewRoute
   '/place/$id': typeof PlaceIdRoute
+  '/practice_/game': typeof PracticeGameRoute
   '/route/$id': typeof RouteIdRoute
   '/route/preview': typeof RoutePreviewRoute
   '/route/steps': typeof RouteStepsRoute
@@ -123,9 +141,11 @@ export interface FileRouteTypes {
     | '/'
     | '/practice'
     | '/saved'
+    | '/settings'
     | '/community/$id'
     | '/community/new'
     | '/place/$id'
+    | '/practice/game'
     | '/route/$id'
     | '/route/preview'
     | '/route/steps'
@@ -136,9 +156,11 @@ export interface FileRouteTypes {
     | '/'
     | '/practice'
     | '/saved'
+    | '/settings'
     | '/community/$id'
     | '/community/new'
     | '/place/$id'
+    | '/practice/game'
     | '/route/$id'
     | '/route/preview'
     | '/route/steps'
@@ -149,9 +171,11 @@ export interface FileRouteTypes {
     | '/'
     | '/practice'
     | '/saved'
+    | '/settings'
     | '/community/$id'
     | '/community/new'
     | '/place/$id'
+    | '/practice_/game'
     | '/route/$id'
     | '/route/preview'
     | '/route/steps'
@@ -163,9 +187,11 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PracticeRoute: typeof PracticeRoute
   SavedRoute: typeof SavedRoute
+  SettingsRoute: typeof SettingsRoute
   CommunityIdRoute: typeof CommunityIdRoute
   CommunityNewRoute: typeof CommunityNewRoute
   PlaceIdRoute: typeof PlaceIdRoute
+  PracticeGameRoute: typeof PracticeGameRoute
   RouteIdRoute: typeof RouteIdRoute
   RoutePreviewRoute: typeof RoutePreviewRoute
   RouteStepsRoute: typeof RouteStepsRoute
@@ -196,6 +222,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SavedRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/community/': {
       id: '/community/'
       path: '/community'
@@ -222,6 +255,13 @@ declare module '@tanstack/react-router' {
       path: '/place/$id'
       fullPath: '/place/$id'
       preLoaderRoute: typeof PlaceIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/practice_/game': {
+      id: '/practice_/game'
+      path: '/practice/game'
+      fullPath: '/practice/game'
+      preLoaderRoute: typeof PracticeGameRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/route/$id': {
@@ -259,9 +299,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PracticeRoute: PracticeRoute,
   SavedRoute: SavedRoute,
+  SettingsRoute: SettingsRoute,
   CommunityIdRoute: CommunityIdRoute,
   CommunityNewRoute: CommunityNewRoute,
   PlaceIdRoute: PlaceIdRoute,
+  PracticeGameRoute: PracticeGameRoute,
   RouteIdRoute: RouteIdRoute,
   RoutePreviewRoute: RoutePreviewRoute,
   RouteStepsRoute: RouteStepsRoute,

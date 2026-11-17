@@ -41,7 +41,7 @@ function Browse() {
       <div role="group" aria-label="Categories" className="-mx-5 flex gap-3 overflow-x-auto px-5 pb-1">
         {([{ id: "all", label: "All" }, ...CATS] as const).map((c) => { const { I, tile } = CAT_STYLE[c.id]; const on = s.cat === c.id; return (
           <button key={c.id} aria-pressed={on} onClick={() => upd({ cat: c.id })} className="flex w-16 shrink-0 flex-col items-center gap-1 rounded-xl py-1 text-xs font-bold text-primary">
-            <span className={`grid size-12 place-items-center rounded-2xl ${tile} ${on ? "ring-[3px] ring-brand" : ""}`}><I className="size-5" /></span>
+            <span className={`grid size-12 place-items-center rounded-2xl border-2 border-primary ${tile} ${on ? "ring-[3px] ring-brand" : ""}`}><I className="size-5" /></span>
             <span className={on ? "text-brand" : ""}>{c.label}</span>
           </button>); })}
       </div>
@@ -74,7 +74,7 @@ function Browse() {
       ) : (
         <ul className="space-y-3">
           {results.map((r) => { const key = `${r.kind}:${r.id}`; return (
-            <li key={key}><ItemLink i={r} className={`flex items-center gap-3 rounded-2xl border p-3 hover:border-brand ${s.sel === key ? "border-2 border-brand" : "border-border"}`}>
+            <li key={key}><ItemLink i={r} className={`flex items-center gap-3 retro rounded-2xl p-3 ${s.sel === key ? "ring-2 ring-brand" : ""}`}>
               <Thumb cat={r.cat} route={r.kind === "route"} />
               <span className="min-w-0 flex-1"><span className="block text-xs font-bold uppercase tracking-wide text-muted-foreground">{r.kind === "route" ? "Route" : CATS.find((c) => c.id === r.cat)!.label}</span>
                 <span className="block font-bold text-primary">{r.name}</span><span className="block text-sm text-muted-foreground">{r.sub}</span></span>
