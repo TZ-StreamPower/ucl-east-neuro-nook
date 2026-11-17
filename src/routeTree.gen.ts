@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as NavigateRouteImport } from './routes/navigate'
 import { Route as PracticeRouteImport } from './routes/practice'
 import { Route as SavedRouteImport } from './routes/saved'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -27,6 +28,11 @@ import { Route as RouteIdStepsRouteImport } from './routes/route.$id_.steps'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NavigateRoute = NavigateRouteImport.update({
+  id: '/navigate',
+  path: '/navigate',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PracticeRoute = PracticeRouteImport.update({
@@ -97,6 +103,7 @@ const RouteIdStepsRoute = RouteIdStepsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/navigate': typeof NavigateRoute
   '/practice': typeof PracticeRoute
   '/saved': typeof SavedRoute
   '/settings': typeof SettingsRoute
@@ -113,6 +120,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/navigate': typeof NavigateRoute
   '/practice': typeof PracticeRoute
   '/saved': typeof SavedRoute
   '/settings': typeof SettingsRoute
@@ -130,6 +138,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/navigate': typeof NavigateRoute
   '/practice': typeof PracticeRoute
   '/saved': typeof SavedRoute
   '/settings': typeof SettingsRoute
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/navigate'
     | '/practice'
     | '/saved'
     | '/settings'
@@ -164,6 +174,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/navigate'
     | '/practice'
     | '/saved'
     | '/settings'
@@ -180,6 +191,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/navigate'
     | '/practice'
     | '/saved'
     | '/settings'
@@ -197,6 +209,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  NavigateRoute: typeof NavigateRoute
   PracticeRoute: typeof PracticeRoute
   SavedRoute: typeof SavedRoute
   SettingsRoute: typeof SettingsRoute
@@ -219,6 +232,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/navigate': {
+      id: '/navigate'
+      path: '/navigate'
+      fullPath: '/navigate'
+      preLoaderRoute: typeof NavigateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/practice': {
@@ -317,6 +337,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  NavigateRoute: NavigateRoute,
   PracticeRoute: PracticeRoute,
   SavedRoute: SavedRoute,
   SettingsRoute: SettingsRoute,

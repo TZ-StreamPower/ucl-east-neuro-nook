@@ -35,3 +35,4 @@ use the editor.
 - Route search params use `zodValidator` + `fallback` so every key stays optional for links; narrow values inside the component.
 - The portrait game is bundled in `public/game/` and opened as a full-screen iframe overlay on the route page (`?game=1`), so the route stays mounted and scroll/tab survive return; fix game layout only in `public/game/portrait.css`.
 - Acceptance evidence goes in `docs/verification-log.md`; only mark items verified with a run recorded there.
+- Sensory ratings and the East Bank navigation graph live in `src/data/sensory.ts`; user ratings combine with seeds via `combineRating` in logic.ts; feedback icons are replaceable SVGs in `src/assets/feedback/` (keep file names) — so the team can drop in their art without code changes.

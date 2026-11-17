@@ -49,3 +49,6 @@
 ## 2026-11-17 Visual pass + iPhone game fit
 - Playwright 375x812, 390x844, 430x932 (touch): direct /?game=1 loads (was stuck on "Loading practice…") PASS; Campus Play → start → Finish here returns to Campus PASS; no horizontal overflow on /, route, place, community, saved, practice PASS; 0 page errors.
 - NOT TESTED: real iPhone Safari (notch/home bar insets), reduced-motion setting.
+
+## 2026-11-17 · White canvas, sensory ratings, Navigate
+Playwright 393×852 (/tmp/browser/nav/check_nav.py): Stratford→Marshgate calmest 16 min avoids Orbit plaza, quickest 12 min; walk → "Too loud" feedback saved; "I need a break" → Go there restarts walk; Quiet study room rated (Preview→Confirm, "includes yours"); Campus "Quiet" filter → 5 results; no overflow, 0 page errors. Unit tests: src/lib/sensory.test.ts (8). Not tested: real iPhone, final graphic assets.

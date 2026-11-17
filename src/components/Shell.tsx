@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, type ReactNode } from "react";
-import { Compass, MessageCircle, Bookmark, X, Settings, WifiOff } from "lucide-react";
+import { Compass, Navigation, MessageCircle, Bookmark, X, Settings, WifiOff } from "lucide-react";
 import { useStore } from "@/lib/store";
 
 export function Heading({ children, display }: { children: ReactNode; display?: boolean }) {
@@ -28,9 +28,9 @@ export function Shell({ back, title, tabs, practice, children, footer }: {
 }
 
 function Tabs() {
-  const items = [{ to: "/", l: "Campus", I: Compass }, { to: "/community", l: "Community", I: MessageCircle }, { to: "/saved", l: "Saved", I: Bookmark }] as const;
+  const items = [{ to: "/", l: "Campus", I: Compass }, { to: "/navigate", l: "Navigate", I: Navigation }, { to: "/community", l: "Community", I: MessageCircle }, { to: "/saved", l: "Saved", I: Bookmark }] as const;
   return (
-    <nav aria-label="Main" className="pb-safe sticky bottom-0 grid grid-cols-3 border-t-2 border-primary bg-background px-5">
+    <nav aria-label="Main" className="pb-safe sticky bottom-0 grid grid-cols-4 border-t-2 border-primary bg-background px-5">
       {items.map(({ to, l, I }) => (
         <Link key={to} to={to} activeOptions={{ exact: to === "/" }} className="group flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-bold text-muted-foreground data-[status=active]:text-primary">
           <span className="grid h-7 w-12 place-items-center rounded-full group-data-[status=active]:sticker group-data-[status=active]:bg-accent-lavender"><I className="size-5" /></span>{l}

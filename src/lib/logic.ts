@@ -43,3 +43,50 @@ export type KeptDraft = { text: string; routeId: string } | null;
 export const keepDraft = (text: string, routeId: string): KeptDraft => (canPublish(text) ? { text, routeId } : null);
 export const toggleReport = (list: string[], id: string) => (list.includes(id) ? list : [...list, id]);
 export const availableOffline = (saved: SavedRef[], r: SavedRef) => isSaved(saved, r);
+
+// ---- Sensory ratings & calm navigation ----
+export type Light = "dark" | "ok" | "bright";
+export type Busy = "free" | "busy" | "full";
+/** noise 1 = quiet … 5 = very loud; calm 1 = overwhelming … 5 = calm; n = number of ratings */
+export type Sensory = { noise: number; light: Light; calm: number; busy: Busy; n: number };
+export type MyRating = { noise?: number; light?: Light; calm?: number; busy?: Busy };
+const r1 = (x: number) => Math.round(x * 10) / 10;
+export function combineRating(seed: Sensory, mine?: MyRating | undefined): Sensory {
+  if (!mine || !Object.keys(mine).length) return seed;
+  return { noise: mine.noise ? r1((seed.noise * seed.n + mine.noise) / (seed.n + 1)) : seed.noise, calm: mine.calm ? r1((seed.calm * seed.n + mine.calm) / (seed.n + 1)) : seed.calm,
+    light: mine.light ?? seed.light, busy: mine.busy ?? seed.busy, n: seed.n + 1 };
+}
+export type FeedbackKind = "quiet" | "loud" | "dark" | "bright" | "crowded" | "overwhelming" | "calm";
+const FB: Record<FeedbackKind, MyRating> = { quiet: { noise: 1 }, loud: { noise: 5 }, dark: { light: "dark" }, bright: { light: "bright" }, crowded: { busy: "full" }, overwhelming: { calm: 1 }, calm: { calm: 5 } };
+export const applyFeedback = (mine: MyRating | undefined, k: FeedbackKind): MyRating => ({ ...(mine ?? {}), ...FB[k] });
+export type Feel = "quiet" | "soft-light" | "not-busy";
+export function matchesFeel(s: Sensory, feel: Feel[]) {
+  return feel.every((f) => (f === "quiet" ? s.noise <= 2.5 : f === "soft-light" ? s.light !== "bright" : s.busy === "free"));
+}
+export const isCalm = (s: Sensory) => s.calm >= 4 && s.noise <= 2.5;
+export type Graph = { a: string; b: string; min: number }[];
+const nbrs = (g: Graph, id: string) => g.flatMap((e) => (e.a === id ? [[e.b, e.min] as const] : e.b === id ? [[e.a, e.min] as const] : []));
+/** Penalty multiplier for entering a node when walking the calmest way. */
+export const stressCost = (s: Sensory) => 1 + (5 - s.calm) * 0.5 + (s.noise >= 4 ? 1 : 0) + (s.busy === "full" ? 0.5 : 0);
+function dijkstra(g: Graph, from: string, w: (to: string, min: number) => number) {
+  const dist: Record<string, number> = { [from]: 0 }; const prev: Record<string, string> = {}; const done = new Set<string>();
+  for (;;) {
+    let u: string | null = null;
+    for (const k in dist) if (!done.has(k) && (u === null || dist[k]! < dist[u]!)) u = k;
+    if (u === null) break; done.add(u);
+    for (const [v, m] of nbrs(g, u)) { const d = dist[u]! + w(v, m); if (dist[v] === undefined || d < dist[v]!) { dist[v] = d; prev[v] = u; } }
+  }
+  return { dist, prev };
+}
+export function planRoute(g: Graph, from: string, to: string, mode: "quick" | "calm", get: (id: string) => Sensory) {
+  if (from === to) return { path: [from], minutes: 0 };
+  const { dist, prev } = dijkstra(g, from, (v, m) => (mode === "calm" ? m * stressCost(get(v)) : m));
+  if (dist[to] === undefined) return null;
+  const path = [to]; while (path[0] !== from) path.unshift(prev[path[0]!]!);
+  let minutes = 0; for (let i = 1; i < path.length; i++) minutes += g.find((e) => (e.a === path[i - 1] && e.b === path[i]) || (e.b === path[i - 1] && e.a === path[i]))!.min;
+  return { path, minutes };
+}
+export function nearestCalm(g: Graph, from: string, get: (id: string) => Sensory) {
+  const { dist } = dijkstra(g, from, (_, m) => m);
+  return Object.keys(dist).filter((k) => k !== from && isCalm(get(k))).sort((a, b) => dist[a]! - dist[b]!)[0] ?? null;
+}

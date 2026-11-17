@@ -5,6 +5,8 @@ import { Search, List, Map as MapIcon, X, ArrowRight, Footprints } from "lucide-
 import { Shell, textLink } from "@/components/Shell";
 import { CAT_STYLE, MapCanvas, MapPin, Thumb } from "@/components/Browse";
 import { CATS, PLACES, ROUTES, DEFAULT_ROUTE, type Cat } from "@/data/demo";
+import { MiniMeter } from "@/components/SensoryMeter";
+import { matchesFeel, type Feel } from "@/lib/logic";
 import { filterResults, switchView, type ResultItem, type BrowseView } from "@/lib/logic";
 import { GamePractice } from "@/components/GamePractice";
 import { GameShowcase } from "@/components/GameShowcase";
@@ -17,7 +19,7 @@ const ALL: ResultItem[] = [
 ];
 const catIds = ["all", ...CATS.map((c) => c.id)];
 export const Route = createFileRoute("/")({
-  validateSearch: zodValidator(z.object({ q: fallback(z.string(), "").default(""), cat: fallback(z.string(), "all").default("all"), view: fallback(z.string(), "list").default("list"), sel: fallback(z.string().optional(), undefined), game: fallback(z.number(), 0).default(0) })),
+  validateSearch: zodValidator(z.object({ q: fallback(z.string(), "").default(""), cat: fallback(z.string(), "all").default("all"), view: fallback(z.string(), "list").default("list"), sel: fallback(z.string().optional(), undefined), game: fallback(z.number(), 0).default(0), feel: fallback(z.string(), "").default("") })),
   head: pageHead("Campus · UCL East Community", "Search places and routes around UCL East."), component: Browse });
 
 function ItemLink({ i, className, children }: { i: ResultItem; className: string; children: React.ReactNode }) {
@@ -29,7 +31,9 @@ function ItemLink({ i, className, children }: { i: ResultItem; className: string
 function Browse() {
   const raw = Route.useSearch(); const s = { ...raw, cat: (catIds.includes(raw.cat) ? raw.cat : "all") as Cat | "all", view: (raw.view === "map" ? "map" : "list") as BrowseView }; const nav = useNavigate({ from: "/" }); const store = useStore();
   const upd = (p: Partial<typeof raw>) => nav({ search: (prev) => ({ ...prev, ...p }), replace: true });
-  const results = filterResults(ALL, s.q, s.cat);
+  const feel = raw.feel.split(",").filter((f): f is Feel => ["quiet", "soft-light", "not-busy"].includes(f));
+  const results = filterResults(ALL, s.q, s.cat).filter((r) => !feel.length || (r.kind === "place" && matchesFeel(store.sensory(r.id), feel)));
+  const toggleFeel = (f: Feel) => upd({ feel: (feel.includes(f) ? feel.filter((x) => x !== f) : [...feel, f]).join(",") });
   const sel = results.find((r) => `${r.kind}:${r.id}` === s.sel);
   return (
     <Shell tabs>
@@ -48,6 +52,10 @@ function Browse() {
             <span className={on ? "text-brand" : ""}>{c.label}</span>
           </button>); })}
       </div>
+      <div role="group" aria-label="How it feels" className="-mx-5 flex gap-2 overflow-x-auto px-5">
+        {([["quiet", "Quiet"], ["soft-light", "Soft light"], ["not-busy", "Not busy"]] as const).map(([f, l]) => (
+          <button key={f} aria-pressed={feel.includes(f)} onClick={() => toggleFeel(f)} className="retro inline-flex min-h-11 shrink-0 items-center rounded-full bg-card px-4 text-sm font-bold text-primary aria-pressed:bg-accent-lime">{l}</button>))}
+      </div>
       <GameShowcase />
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground" role="status">{results.length} {results.length === 1 ? "result" : "results"}</p>
@@ -59,7 +67,7 @@ function Browse() {
       </div>
       {results.length === 0 ? (
         <div className="space-y-2 rounded-xl bg-accent p-4"><p className="font-bold text-primary">No matches</p><p className="text-sm">Try another word or category.</p>
-          <button className={textLink} onClick={() => upd({ q: "", cat: "all" })}>Reset search</button></div>
+          <button className={textLink} onClick={() => upd({ q: "", cat: "all", feel: "" })}>Reset search</button></div>
       ) : s.view === "map" ? (
         <div className="space-y-3">
           <MapCanvas className="aspect-[4/5]">
@@ -81,7 +89,7 @@ function Browse() {
             <li key={key}><ItemLink i={r} className={`flex items-center gap-3 retro rounded-2xl bg-card p-3 ${s.sel === key ? "ring-2 ring-brand" : ""}`}>
               <Thumb cat={r.cat} route={r.kind === "route"} className="size-12" />
               <span className="min-w-0 flex-1"><span className="block text-xs font-bold uppercase tracking-wide text-muted-foreground">{r.kind === "route" ? "Route" : CATS.find((c) => c.id === r.cat)!.label}</span>
-                <span className="block font-bold text-primary">{r.name}</span><span className="block truncate text-sm text-muted-foreground">{r.sub}</span></span>
+                <span className="block font-bold text-primary">{r.name}</span><span className="block truncate text-sm text-muted-foreground">{r.sub}</span>{r.kind === "place" && <MiniMeter s={store.sensory(r.id)} />}</span>
               <ArrowRight className="size-4 text-primary" aria-hidden="true" />
             </ItemLink></li>); })}
         </ul>
