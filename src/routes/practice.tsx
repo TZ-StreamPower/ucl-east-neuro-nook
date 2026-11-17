@@ -4,7 +4,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, ArrowUp, ExternalLink, ChevronLeft } from "lucide-react";
 import { Shell, Heading, backCls, primaryBtn, secondaryBtn, textLink } from "@/components/Shell";
 import { PracticeScene } from "@/components/scenes/Scene";
-import { CHOICES, PRACTICE_SITUATION, STARTER_DRAFT, ILLUSTRATIVE, DEFAULT_ROUTE, findRoute } from "@/data/demo";
+import { SCENARIOS, CHOICES, PRACTICE_SITUATION, STARTER_DRAFT, ILLUSTRATIVE, DEFAULT_ROUTE, findRoute } from "@/data/demo";
 import { useStore } from "@/lib/store";
 import { practiceExit, type PracticeFrom } from "@/lib/logic";
 import { pageHead } from "@/lib/head";
@@ -29,6 +29,8 @@ function Practice() {
       <p className="text-lg">The exit feels busy. Your next landmark is {r.steps[1]!.landmark.name.toLowerCase()}.</p>
       <button className={primaryBtn} onClick={() => s.set({ stage: 2 })}>Explore choices <ArrowRight className="size-4" /></button>
       <Link to="/practice/game" search={{ route }} className={textLink}>Open the game <ExternalLink className="size-4" /></Link>
+      <section className="space-y-2"><h2 className="font-bold text-primary">Choose another practice</h2>
+        {SCENARIOS.map((x) => <Link key={x.id} to="/practice/scenario/$id" params={{ id: x.id }} className={secondaryBtn}>{x.title}<ArrowRight className="size-4" /></Link>)}</section>
       <p className="text-sm text-muted-foreground">{ILLUSTRATIVE}</p>
     </Shell>
   );

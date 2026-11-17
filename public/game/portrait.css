@@ -1,0 +1,75 @@
+/* Additive portrait trial. Desktop and landscape keep their original layout. */
+#portraitViewport{display:contents}
+#mapOverview,#touchInteract{display:none}
+@media(max-width:700px) and (orientation:portrait){
+ :root{--portrait-purple:#58347d;--portrait-ink:#302738;--portrait-paper:#fffdf8}
+ body{background:var(--portrait-paper)}
+ button,input,select,textarea{font-family:system-ui,sans-serif}
+ button{touch-action:manipulation;min-height:44px}
+ input,select,textarea{font-size:16px}
+ .primary-button,.proximity-respond{background:var(--portrait-purple)!important;color:white!important;border-color:var(--portrait-ink)!important}
+ .topbar{padding:10px 12px;gap:8px}.brand small{display:none}
+ .brand{font-family:system-ui,sans-serif;font-size:14px}.brand-mark{width:28px;height:28px}
+ .top-actions{gap:4px}.top-actions button{min-width:44px}
+ body:not(.is-playing) main{padding:0}
+ body:not(.is-playing) .screen{padding:20px 16px;border:0;box-shadow:none}
+ .welcome-copy h1{font-size:42px}.welcome-art{min-height:200px}
+ .character-grid{grid-template-columns:1fr}.character-card{padding:16px}
+ .character-portrait{height:100px}.customize-panel{display:flex;gap:12px}
+ .screen-footer{gap:12px;flex-wrap:wrap}
+ body.is-playing .topbar{height:calc(52px + env(safe-area-inset-top));padding:env(safe-area-inset-top) 12px 0;background:var(--portrait-paper);border-bottom:1px solid #d4cadc}
+ body.is-playing main{top:calc(52px + env(safe-area-inset-top))!important;height:calc(100dvh - 52px - env(safe-area-inset-top))!important}
+ body.is-playing .game-screen,body.is-playing .canvas-shell{background:var(--portrait-paper)}
+ body.is-playing .canvas-shell::after{display:none}
+ body.is-playing .portrait-mode-prompt{display:none!important}
+ body.is-playing .chapter-header{visibility:visible;top:0;left:12px;right:12px;max-width:none;height:56px;padding:8px 0;margin:0;border:0;box-shadow:none;background:var(--portrait-paper);pointer-events:none}
+ body.is-playing .chapter-header h1{font:700 19px/1.2 system-ui,sans-serif;margin:0}
+ body.is-playing .chapter-header .eyebrow{font:600 10px/1.2 system-ui,sans-serif;letter-spacing:.08em;margin-bottom:4px}
+ body.is-playing .chapter-header p:last-child,body.is-playing .chapter-progress{display:none}
+ body.is-playing .meter-hud{visibility:visible;display:flex;top:58px;left:12px;right:12px;max-width:none;gap:6px}
+ body.is-playing .hud-meter{flex:1;min-width:0;min-height:44px;padding:4px 7px;border:1px solid #bcb0c8;background:#f0eaf6;color:#302738;box-shadow:none;gap:0 4px}
+ body.is-playing .hud-label{color:#594b65;font:500 10px system-ui,sans-serif}.hud-icon{display:none!important}
+ body.is-playing .hud-state{font:650 12px system-ui,sans-serif}
+ body.is-playing #portraitViewport{display:block;position:absolute;top:110px;bottom:calc(230px + env(safe-area-inset-bottom));left:0;right:0;overflow:hidden;background:#dce4d2;border-block:2px solid var(--portrait-ink)}
+ body.is-playing #portraitViewport #worldCanvas{visibility:visible;max-width:none!important;max-height:none!important;aspect-ratio:auto;touch-action:manipulation}
+ body.is-playing .canvas-corner{display:none}
+ body.is-playing .world-corner-actions{visibility:visible;top:118px;left:10px;right:10px;justify-content:flex-end;gap:6px}
+ body.is-playing .corner-action{min-height:44px;padding:7px 9px;font:600 12px system-ui,sans-serif;border:1px solid #45354e;border-radius:8px!important;box-shadow:2px 2px 0 #45354e;background:#fffdf8}
+ body.is-playing #mapOverview{display:block;margin-right:auto}
+ body.is-playing .corner-menu{z-index:20;background:var(--portrait-paper);border:1px solid #45354e}
+ body.is-playing .corner-menu button{min-height:44px;font-size:14px}
+ body.is-playing .world-actions{visibility:visible;display:flex;position:absolute;left:12px;right:12px;bottom:calc(136px + env(safe-area-inset-bottom));height:84px;max-width:none;transform:none;flex-wrap:wrap;justify-content:flex-start;gap:6px;padding:0;background:none;border:0;box-shadow:none}
+ body.is-playing .world-action{min-height:38px;flex:1 1 42%;padding:6px;font:600 12px system-ui,sans-serif;border:1px solid #c1b4cd;background:#f4eff8;color:#302738;box-shadow:none}
+ body.is-playing .world-action kbd{display:none}
+ body.is-playing .controls-bar{visibility:visible;position:absolute;left:12px;right:12px;bottom:env(safe-area-inset-bottom);height:128px;display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:8px;padding:4px 0;border:0;background:var(--portrait-paper);z-index:8;pointer-events:auto}
+ body.is-playing .movement-help{display:none}
+ body.is-playing #touchInteract{display:block;min-width:112px;min-height:56px;padding:12px;font:700 16px system-ui,sans-serif;order:2}
+ body.is-playing .touch-controls{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(2,48px);gap:6px;margin:0;order:1}
+ body.is-playing .touch-controls button{width:48px;height:48px;min-width:48px;min-height:48px;border:2px solid #45354e;border-radius:10px!important;background:#ece2f6;color:#302738;font:700 22px system-ui,sans-serif;touch-action:none}
+ [data-dir="up"]{grid-column:2;grid-row:1}[data-dir="left"]{grid-column:1;grid-row:2}[data-dir="down"]{grid-column:2;grid-row:2}[data-dir="right"]{grid-column:3;grid-row:2}
+ body.is-playing .door-button{visibility:visible;right:12px;bottom:calc(240px + env(safe-area-inset-bottom));min-height:44px;font:700 14px system-ui,sans-serif;background:var(--portrait-purple);color:white;border:2px solid #302738}
+ body.is-playing .task-drawer{position:absolute;top:110px;bottom:calc(136px + env(safe-area-inset-bottom));left:10px;right:10px;width:auto;max-height:none;overflow:auto;z-index:20;background:var(--portrait-paper);padding:12px;border:2px solid #45354e}
+ body.is-playing .proximity-cue{left:10px;right:10px;bottom:calc(136px + env(safe-area-inset-bottom));width:auto;max-height:44dvh;overflow:auto;padding:12px;border:2px solid #45354e;background:var(--portrait-paper);z-index:21}
+ body.is-playing .proximity-cue h2{font:700 18px system-ui,sans-serif}
+ body.is-playing .proximity-cue-description,body.is-playing .proximity-thought-row p{font:400 14px/1.4 system-ui,sans-serif}
+ body.is-playing .proximity-cue-actions button{font:600 14px system-ui,sans-serif;min-height:44px}
+ body.is-playing .proximity-cue-note{font:400 11px/1.4 system-ui,sans-serif}
+ body.is-playing .game-toast{left:12px;right:12px;width:auto;max-width:none;top:170px;bottom:auto;transform:none;font:600 13px/1.4 system-ui,sans-serif}
+ .overlay{z-index:100!important;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);align-items:end}
+ .dialog{width:100%;max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 12px);padding:18px 16px 24px;overflow:auto;overscroll-behavior:contain;border:2px solid #45354e;border-radius:18px 18px 0 0!important;background:var(--portrait-paper)}
+ .dialog h2{font:700 23px/1.2 system-ui,sans-serif}.dialog p{font-size:15px}
+ .icon-button{min-width:44px;min-height:44px}
+ .choice{min-height:52px;font-size:15px;padding:12px}.choice small{font-size:13px}
+ .micro-option-list{grid-template-columns:1fr}.micro-option,.micro-card-option{min-height:52px}
+ body.is-playing .game-pause-overlay{z-index:40;background:#302738cc}
+ body.is-playing .status-footer{display:none}
+ .hide-meters .meter-hud{display:none!important}
+}
+
+/* Lovable integration fixes (2026-11-17): keep cues compact so the scene and controls stay usable */
+@media(max-width:700px) and (orientation:portrait){
+ body.is-playing .topbar{display:none!important}
+ body.is-playing .proximity-cue{max-height:30dvh;bottom:calc(140px + env(safe-area-inset-bottom));padding:10px}
+ body.is-playing .proximity-thought-row,body.is-playing .proximity-cue-note{display:none}
+ body.is-playing .proximity-cue-description{margin:2px 0 6px}
+}

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#172e38">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23142c34'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='42' fill='%23f3c86d'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E">
+  <title>Same Day, Three Paths · Team 6</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="skin.css?v=20261115-7">
+  <link rel="stylesheet" href="portrait.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">✦</span><span id="brandTitle">Same Day, Three Paths</span><small id="brandTag">TEAM 6 · UCL EAST CONCEPT</small></div>
+      <div class="top-actions">
+        <div id="languageSwitch" class="language-switch" role="group" aria-label="Homepage language">
+          <button id="languageEnglish" class="language-button selected" type="button" aria-pressed="true">EN</button>
+          <button id="languageChinese" class="language-button" type="button" aria-pressed="false">中文</button>
+        </div>
+        <button id="settingsButton" class="text-button" type="button">Settings</button>
+        <button id="aboutButton" class="text-button" type="button">About</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="welcomeScreen" class="screen welcome-screen">
+        <div class="welcome-copy">
+          <p id="welcomeEyebrow" class="eyebrow">AN INTERACTIVE CAMPUS DAY · PLAYABLE CONCEPT</p>
+          <h1><span id="welcomeHeadline">One day.</span><br><em id="welcomeSubheadline">Different paths.</em></h1>
+          <p id="welcomeDescription">Starting university means learning new routes, spaces and expectations. Explore a day at an illustrative UCL East campus through one student's choices.</p>
+          <div class="intro-pills"><span id="welcomePillOne">5 chapters</span><span id="welcomePillTwo">3 perspectives</span><span id="welcomePillThree">No right way to cope</span></div>
+          <button id="startButton" class="primary-button" type="button">Start a new day <span aria-hidden="true">→</span></button>
+          <p id="welcomeFinePrint" class="fine-print">This is a student design prototype. Characters and campus conditions are fictionalised research hypotheses, not a diagnostic or live navigation tool.</p>
+        </div>
+        <div id="welcomeArt" class="welcome-art" role="img" aria-label="Pixel art storyboard showing a student preparing for their day and approaching campus">
+          <div class="art-panel home-art"></div><div class="art-panel route-art"></div>
+          <div id="welcomeArtCaption" class="art-caption">FROM HOME → STRATFORD → UCL EAST</div>
+        </div>
+      </section>
+
+      <section id="characterScreen" class="screen character-screen hidden" aria-labelledby="characterTitle">
+        <div class="screen-heading"><p class="eyebrow">BEFORE THE DAY BEGINS</p><h1 id="characterTitle">Choose a perspective</h1><p>Each character has interests, strengths and preferences. They are individual story drafts, not types or difficulty levels.</p></div>
+        <div id="characterCards" class="character-grid"></div>
+        <div class="customize-panel"><div><h2>Make the character yours</h2><p>Cosmetic choices change appearance only.</p></div><label>Hair <select id="hairSelect"><option value="dark">Dark</option><option value="brown">Brown</option><option value="auburn">Auburn</option></select></label><label>Outfit <select id="outfitSelect"><option value="coral">Coral</option><option value="blue">Blue</option><option value="sage">Sage</option></select></label></div>
+        <div class="screen-footer"><button id="backToWelcome" class="ghost-button" type="button">← Back</button><button id="beginGame" class="primary-button" type="button" disabled>Begin this day →</button></div>
+      </section>
+
+      <section id="gameScreen" class="screen game-screen hidden" aria-label="Playable campus day">
+        <div class="chapter-header"><div><p id="chapterKicker" class="eyebrow"></p><h1 id="chapterTitle"></h1><p id="chapterDescription"></p></div><div id="chapterProgress" class="chapter-progress" aria-label="Chapter progress"></div></div>
+        <div class="game-layout">
+          <div class="play-column">
+            <div class="canvas-shell">
+              <div id="portraitViewport"><canvas id="worldCanvas" width="960" height="576" tabindex="0" role="img" aria-label="Explorable campus scene. Move with arrow keys or WASD; scene cues appear automatically as you approach. Press E to explore responses, or open Moments from the menu."></canvas></div>
+              <div class="canvas-corner">ILLUSTRATIVE CAMPUS MAP · NOT LIVE WAYFINDING</div>
+              <div id="meterHud" class="meter-hud" aria-label="Story status">
+                <button id="hudEnergy" type="button" class="hud-meter"><span class="hud-icon" aria-hidden="true">✦</span><span class="hud-label">Energy</span><span class="hud-state">Steady</span><span class="hud-bar"><i></i></span></button>
+                <button id="hudFocus" type="button" class="hud-meter"><span class="hud-icon" aria-hidden="true">◈</span><span class="hud-label">Focus</span><span class="hud-state">Clear</span><span class="hud-bar"><i></i></span></button>
+                <button id="hudLoad" type="button" class="hud-meter"><span class="hud-icon" aria-hidden="true">〰</span><span class="hud-label">Sensory load</span><span class="hud-state">Calm</span><span class="hud-bar"><i></i></span></button>
+              </div>
+              <div class="world-corner-actions"><button id="mapOverview" class="corner-action" type="button" aria-pressed="false">Full map</button>
+                <button id="momentsHudButton" class="corner-action" type="button" aria-expanded="false" aria-controls="taskDrawer">Moments <span id="hudTaskCount">0/3</span></button>
+                <div class="corner-menu-wrap">
+                  <button id="gameMenuButton" class="corner-action icon-corner-action" type="button" aria-expanded="false" aria-controls="gameMenuPanel" aria-label="Game menu">☰</button>
+                  <div id="gameMenuPanel" class="corner-menu hidden">
+                    <button id="gameSettingsButton" type="button">Settings</button>
+                    <button id="gameAboutButton" type="button">About</button>
+                    <button id="gameLanguageButton" type="button">中文</button>
+                    <button id="pauseButton" type="button">Pause</button>
+                  </div>
+                </div>
+              </div>
+              <div id="gameToast" class="game-toast" role="status" aria-live="polite"></div>
+              <section id="proximityCue" class="proximity-cue hidden" role="region" aria-live="polite" aria-atomic="true" aria-label="A scene moment nearby">
+                <div class="proximity-cue-head"><span id="proximityCueEyebrow" class="proximity-cue-eyebrow">A MOMENT NEARBY</span><span class="proximity-cue-mark" aria-hidden="true">…</span></div>
+                <h2 id="proximityCueTitle"></h2>
+                <p id="proximityCueDescription" class="proximity-cue-description"></p>
+                <div class="proximity-thought-row"><div id="proximityAvatar" class="proximity-avatar" aria-hidden="true"></div><div><strong id="proximityCueThoughtName"></strong><p id="proximityCueThought"></p></div></div>
+                <small id="proximityCueNote" class="proximity-cue-note"></small>
+                <div class="proximity-cue-actions"><button id="proximityRespondButton" class="proximity-respond" type="button">Explore response options</button><button id="proximityDismissButton" class="proximity-dismiss" type="button">Keep exploring</button></div>
+              </section>
+              <div class="world-actions" aria-label="Character actions">
+                <button id="wakeButton" type="button" class="world-action hidden">Wake up <kbd>E</kbd></button>
+                <button id="pickupButton" type="button" class="world-action">Pick up / put down <kbd>H</kbd></button>
+                <button id="examineButton" type="button" class="world-action">Check timetable <kbd>R</kbd></button>
+                <button id="waveActionButton" type="button" class="world-action">Wave <kbd>F</kbd></button>
+                <button id="restButton" type="button" class="world-action">Pause / stand <kbd>P</kbd></button>
+              </div>
+              <button id="doorButton" class="door-button hidden" type="button">Leave home →</button>
+              <aside id="taskDrawer" class="task-drawer hidden" aria-label="Chapter moments">
+                <div class="drawer-heading"><div><strong>Moments</strong><small id="taskCount"></small></div><button id="closeTaskDrawer" class="icon-button" type="button" aria-label="Close moments">×</button></div>
+                <p class="task-tip">Walk to a marker and press E, or choose a moment here.</p>
+                <div id="taskList"></div>
+                <button id="preferenceCardButton" class="secondary-button full-width" type="button">My preference card</button>
+                <button id="nextChapterButton" class="primary-button full-width" type="button" disabled>Continue the day →</button>
+                <p id="nextHint" class="sidebar-note"></p>
+              </aside>
+              <div class="legacy-avatar-cache hidden" aria-hidden="true"><div id="miniAvatar"></div><span id="profileName"></span><span id="profileLine"></span><div id="meterPanel"></div></div>
+              <div id="portraitModePrompt" class="portrait-mode-prompt hidden"><div><strong>Please turn your device sideways</strong><p>This game is designed for landscape play.</p></div></div>
+              <div id="gamePauseOverlay" class="game-pause-overlay hidden" aria-hidden="true"><div><strong id="pauseTitle">Paused</strong><button id="resumeButton" class="primary-button" type="button">Resume</button></div></div>
+            </div>
+            <div class="controls-bar"><button id="touchInteract" class="primary-button" type="button">Explore</button>
+              <span id="movementHelp" class="movement-help">Move with WASD / arrows · scene cues appear as you approach · <kbd>E</kbd> explore responses</span>
+              <div id="touchControls" class="touch-controls" aria-label="Movement controls"><button data-dir="left" aria-label="Move left">←</button><button data-dir="up" aria-label="Move up">↑</button><button data-dir="down" aria-label="Move down">↓</button><button data-dir="right" aria-label="Move right">→</button></div>
+            </div>
+          </div>
+        </div>
+        <div class="status-footer"><span id="currentCharacterFooter"></span><span id="poseStatus" role="status" aria-live="polite">Pause, change course or leave a situation whenever the story offers it.</span></div>
+      </section>
+
+      <section id="endingScreen" class="screen ending-screen hidden"><div class="ending-art" role="img" aria-label="An illustrated student resting at home"><div id="endingRestCharacter" aria-hidden="true"></div></div><div class="ending-copy"><p class="eyebrow">END OF THE CAMPUS DAY</p><h1>Home, at your own pace.</h1><p>You made choices based on the information and support available. A different person or a different day could lead to a different path.</p><div id="daySummary" class="summary-box"></div><p class="fine-print">The story's day ends here. Real fatigue and support needs do not reset on a schedule.</p><div class="button-row"><button id="reflectionButton" class="primary-button" type="button">Reflect on the day →</button><button id="replayButton" class="ghost-button" type="button">Play another path</button></div></div></section>
+
+      <section id="reflectionScreen" class="screen reflection-screen hidden"><div class="screen-heading"><p class="eyebrow">AFTER THE EXPERIENCE</p><h1>What happens beyond the game?</h1><p>Use the story to discuss concrete changes in information, conversations and campus support. Your choices are not posted anywhere.</p></div><div class="reflection-grid"><article><span class="step-number">01</span><h2>Ask, then listen</h2><p>“What would help in this situation?” is more useful than assuming the same support works for everyone.</p></article><article><span class="step-number">02</span><h2>Make options visible</h2><p>Clear room information, written instructions, pause options and exit rules let people make their own choices.</p></article><article><span class="step-number">03</span><h2>Change the setting</h2><p>Students should not carry every burden alone. Peers, staff and campus services can change how situations work.</p></article></div><section class="body-state-examples"><h2 id="bodyStateExamplesTitle">More body-state examples</h2><p id="bodyStateExamplesIntro">This gallery separates sensory experiences from separate health events.</p><div id="bodyStateGallery"></div></section><div class="reflection-prompt"><label for="privateReflection">Private reflection (optional)</label><textarea id="privateReflection" rows="3" placeholder="One action I could take, or one thing this story missed…"></textarea><small>This text stays on this page and disappears when you refresh or close it.</small></div><div class="button-row"><button id="communityButton" class="primary-button" type="button">Explore the discussion space →</button><button id="finishButton" class="ghost-button" type="button">Finish here</button></div></section>
+
+      <section id="communityScreen" class="screen community-screen hidden"><div class="screen-heading"><p class="eyebrow">OPTIONAL COMMUNITY CONCEPT</p><h1>Keep the conversation open</h1><p>This is a local demonstration of a possible community space. No posts are sent to a server or shared with other visitors.</p></div><div class="community-layout"><div><h2>Discussion themes</h2><div id="postList" class="post-list"></div></div><aside class="community-compose"><h2>Add a local reflection</h2><label for="postTopic">Topic</label><select id="postTopic"><option>Routes and information</option><option>Sensory spaces</option><option>How to respond</option><option>What the game missed</option></select><label for="postBody">Your thought</label><textarea id="postBody" rows="5" placeholder="Share a suggestion or a question. Please avoid personal details in this demo."></textarea><button id="addPostButton" class="secondary-button" type="button">Add to this local preview</button><p class="fine-print">A real community would need co-designed rules, moderation, privacy controls and a clear route for campus feedback.</p></aside></div><div class="button-row"><button id="restartButton" class="primary-button" type="button">Explore another path →</button><button id="backToReflection" class="ghost-button" type="button">← Back to reflection</button></div></section>
+    </main>
+    <footer class="page-footer"><span id="footerTeam">TEAM 6 · DESIGN INNOVATION 2026</span><span id="footerNote">Prototype content needs lived-experience review before research or public deployment.</span></footer>
+  </div>
+
+  <div id="eventOverlay" class="overlay hidden" aria-hidden="true"><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle"><div class="dialog-top"><span id="dialogStep" class="eyebrow"></span><button id="closeDialog" class="icon-button" type="button" aria-label="Close dialogue">×</button></div><h2 id="dialogTitle"></h2><p id="dialogDescription"></p><div id="dialogInsight" class="persona-insight"></div><div id="dialogThought" class="thought-row"></div><div id="choiceList" class="choice-list"></div><div id="outcomeBox" class="outcome-box hidden" role="region" aria-live="polite" aria-label="Choice interaction"></div></div></div>
+  <div id="infoOverlay" class="overlay hidden" aria-hidden="true"><div class="dialog info-dialog" role="dialog" aria-modal="true" aria-labelledby="infoTitle"><div class="dialog-top"><span class="eyebrow">TEAM 6 PROJECT</span><button id="closeInfo" class="icon-button" type="button" aria-label="Close">×</button></div><h2 id="infoTitle"></h2><div id="infoContent"></div></div></div>
+  <script src="assets/art-config.js?v=20261115-4"></script>
+  <script src="game.js?v=20261115-14"></script>
+</body>
+</html>
