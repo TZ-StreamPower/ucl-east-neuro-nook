@@ -35,3 +35,11 @@ export function threadBack(from: ThreadFrom, ref?: string) {
 
 export const setStep = (m: Record<string, number>, id: string, n: number) => ({ ...m, [id]: n });
 export const clearStep = (m: Record<string, number>, id: string) => { const c = { ...m }; delete c[id]; return c; };
+
+export type Prefs = { sound: boolean; reduceMotion: boolean; detail: "short" | "full"; routePref: "none" | "fewer-crowds" | "step-free" };
+export const DEFAULT_PREFS: Prefs = { sound: false, reduceMotion: false, detail: "full", routePref: "none" };
+export const visibleNotes = (notes: string[], detail: Prefs["detail"]) => (detail === "short" ? notes.slice(0, 1) : notes);
+export type KeptDraft = { text: string; routeId: string } | null;
+export const keepDraft = (text: string, routeId: string): KeptDraft => (canPublish(text) ? { text, routeId } : null);
+export const toggleReport = (list: string[], id: string) => (list.includes(id) ? list : [...list, id]);
+export const availableOffline = (saved: SavedRef[], r: SavedRef) => isSaved(saved, r);
