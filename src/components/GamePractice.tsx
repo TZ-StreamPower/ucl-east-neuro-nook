@@ -10,7 +10,7 @@ export function GamePractice({ onBack, onAsk, backLabel = "Route" }: { onBack: (
   const [key, setKey] = useState(0);
   const cb = useRef(onBack); cb.current = onBack;
   const frame = useRef<HTMLIFrameElement>(null);
-  const attach = (f: HTMLIFrameElement | null) => { if (!f) return; setState("ready"); try { const b = f.contentDocument?.getElementById("finishButton"); if (b && !b.dataset.hooked) { b.dataset.hooked = "1"; b.addEventListener("click", () => cb.current()); } } catch { /* cross-origin: top bar still returns */ } };
+  const attach = (f: HTMLIFrameElement | null) => { if (!f) return; setState("ready"); try { const b = f.contentDocument?.getElementById("finishButton"); if (b && !b.dataset["hooked"]) { b.dataset["hooked"] = "1"; b.addEventListener("click", () => cb.current()); } } catch { /* cross-origin: top bar still returns */ } };
   // SSR/direct load: iframe may finish before hydration, so onLoad never fires.
   useEffect(() => { const f = frame.current; try { const d = f?.contentDocument; if (d && d.readyState === "complete" && d.URL !== "about:blank") attach(f); } catch { /* ignore */ } }, [key]);
   useEffect(() => {
