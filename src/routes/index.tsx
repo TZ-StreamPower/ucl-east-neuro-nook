@@ -6,6 +6,8 @@ import { Shell, textLink } from "@/components/Shell";
 import { CAT_STYLE, MapCanvas, MapPin, Thumb } from "@/components/Browse";
 import { CATS, PLACES, ROUTES, ILLUSTRATIVE, DEFAULT_ROUTE, type Cat } from "@/data/demo";
 import { filterResults, switchView, type ResultItem, type BrowseView } from "@/lib/logic";
+import { GamePractice } from "@/components/GamePractice";
+import { GameShowcase } from "@/components/GameShowcase";
 import { pageHead } from "@/lib/head";
 import { useStore } from "@/lib/store";
 
@@ -15,7 +17,7 @@ const ALL: ResultItem[] = [
 ];
 const catIds = ["all", ...CATS.map((c) => c.id)];
 export const Route = createFileRoute("/")({
-  validateSearch: zodValidator(z.object({ q: fallback(z.string(), "").default(""), cat: fallback(z.string(), "all").default("all"), view: fallback(z.string(), "list").default("list"), sel: fallback(z.string().optional(), undefined) })),
+  validateSearch: zodValidator(z.object({ q: fallback(z.string(), "").default(""), cat: fallback(z.string(), "all").default("all"), view: fallback(z.string(), "list").default("list"), sel: fallback(z.string().optional(), undefined), game: fallback(z.number(), 0).default(0) })),
   head: pageHead("Campus · UCL East Community", "Search places and routes around UCL East."), component: Browse });
 
 function ItemLink({ i, className, children }: { i: ResultItem; className: string; children: React.ReactNode }) {
@@ -31,6 +33,7 @@ function Browse() {
   const sel = results.find((r) => `${r.kind}:${r.id}` === s.sel);
   return (
     <Shell tabs>
+      {s.game === 1 && <GamePractice backLabel="Back to Campus" onBack={() => nav({ search: (p) => ({ ...p, game: 0 }), replace: true, resetScroll: false })} onAsk={() => nav({ to: "/community/new", search: { from: "feed", route: DEFAULT_ROUTE } })} />}
       <h1 className="sr-only">Campus</h1>
       <label className="flex min-h-12 items-center gap-2 rounded-full border-2 border-border bg-background px-4 focus-within:border-brand">
         <Search className="size-5 text-muted-foreground" aria-hidden="true" />
@@ -45,6 +48,7 @@ function Browse() {
             <span className={on ? "text-brand" : ""}>{c.label}</span>
           </button>); })}
       </div>
+      <GameShowcase />
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground" role="status">{results.length} {results.length === 1 ? "result" : "results"}</p>
         <div role="group" aria-label="View" className="flex rounded-full border border-border p-0.5">

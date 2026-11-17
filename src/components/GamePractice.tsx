@@ -5,7 +5,7 @@ import { GAME_URL } from "@/data/demo";
 const bar = "retro inline-flex min-h-11 items-center gap-1 rounded-lg px-3 text-sm font-bold";
 
 /** Full-screen local game over the route page; parent stays mounted so scroll/tab survive. */
-export function GamePractice({ onBack, onAsk }: { onBack: () => void; onAsk: () => void }) {
+export function GamePractice({ onBack, onAsk, backLabel = "Back to route" }: { onBack: () => void; onAsk: () => void; backLabel?: string }) {
   const [state, setState] = useState<"loading" | "ready" | "failed">("loading");
   const [key, setKey] = useState(0);
   const cb = useRef(onBack); cb.current = onBack;
@@ -23,7 +23,7 @@ export function GamePractice({ onBack, onAsk }: { onBack: () => void; onAsk: () 
   return (
     <section aria-label="Campus Practice game" className="fixed inset-0 z-40 flex flex-col bg-background" style={{ height: "100dvh" }}>
       <div className="flex items-center gap-2 border-b-2 border-primary px-2 py-1" style={{ paddingTop: "max(env(safe-area-inset-top), 4px)" }}>
-        <button onClick={onBack} className={`${bar} bg-primary text-primary-foreground`}><ChevronLeft className="size-4" />Back to route</button>
+        <button onClick={onBack} className={`${bar} bg-primary text-primary-foreground`}><ChevronLeft className="size-4" />{backLabel}</button>
         <button onClick={onAsk} className={`${bar} ml-auto bg-background text-primary`}><MessageCircle className="size-4" />Ask</button>
       </div>
       <div className="relative min-h-0 flex-1">

@@ -42,3 +42,6 @@
 | In-game "Finish here" | 393, 1280 | Previously stayed inside the game; now returns to route | Fixed |
 | Escape / browser back close game | 393, 1280 | Close | Pass |
 | Production build, real iPhone Safari, landscape, pause, Chinese language | — | Not run | Not tested |
+
+## 2026-11-17 Campus game showcase
+- Playwright 375x812, 393x852: Campus shows "Same Day, Three Paths" card above results; Start experience (48px) opens game overlay; Back to Campus closes it; no horizontal overflow; 0 page errors. Vitest passes.
