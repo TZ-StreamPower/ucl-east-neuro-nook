@@ -73,3 +73,10 @@
  body.is-playing .proximity-thought-row,body.is-playing .proximity-cue-note{display:none}
  body.is-playing .proximity-cue-description{margin:2px 0 6px}
 }
+
+/* iPhone shell fit (2026-11-17): no double-tap zoom, no rubber-band, home-bar inset */
+html,body{touch-action:manipulation;overscroll-behavior:none;-webkit-text-size-adjust:100%}
+@media(max-width:700px) and (orientation:portrait){
+ body{padding-bottom:env(safe-area-inset-bottom)}
+ button,a{-webkit-tap-highlight-color:transparent}
+}

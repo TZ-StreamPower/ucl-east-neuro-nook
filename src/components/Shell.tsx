@@ -32,8 +32,8 @@ function Tabs() {
   return (
     <nav aria-label="Main" className="pb-safe sticky bottom-0 grid grid-cols-3 border-t-2 border-primary bg-background px-5">
       {items.map(({ to, l, I }) => (
-        <Link key={to} to={to} activeOptions={{ exact: to === "/" }} className="flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-bold text-muted-foreground data-[status=active]:text-brand">
-          <I className="size-5" />{l}
+        <Link key={to} to={to} activeOptions={{ exact: to === "/" }} className="group flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-bold text-muted-foreground data-[status=active]:text-primary">
+          <span className="grid h-7 w-12 place-items-center rounded-full group-data-[status=active]:sticker group-data-[status=active]:bg-accent-lavender"><I className="size-5" /></span>{l}
         </Link>
       ))}
     </nav>

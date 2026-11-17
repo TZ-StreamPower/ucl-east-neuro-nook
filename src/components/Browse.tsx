@@ -4,16 +4,16 @@ import type { Cat, XY } from "@/data/demo";
 
 export const CAT_STYLE: Record<Cat | "all", { I: typeof Building2; tile: string }> = {
   all: { I: LayoutGrid, tile: "bg-primary/10 text-primary" },
-  buildings: { I: Building2, tile: "bg-cat-buildings/15 text-cat-buildings" },
-  food: { I: Coffee, tile: "bg-cat-food/15 text-cat-food" },
-  study: { I: BookOpen, tile: "bg-cat-study/15 text-cat-study" },
-  support: { I: LifeBuoy, tile: "bg-cat-support/15 text-cat-support" },
+  buildings: { I: Building2, tile: "bg-cat-buildings text-primary" },
+  food: { I: Coffee, tile: "bg-cat-food text-primary" },
+  study: { I: BookOpen, tile: "bg-cat-study text-primary" },
+  support: { I: LifeBuoy, tile: "bg-cat-support text-primary" },
 };
 
 /** Placeholder thumbnail: category-tinted tile with its icon. */
 export function Thumb({ cat, route, className = "size-16" }: { cat: Cat; route?: boolean; className?: string }) {
   const { I, tile } = CAT_STYLE[cat]; const Icon = route ? RouteIcon : I;
-  return <span aria-hidden="true" className={`grid shrink-0 place-items-center rounded-xl ${tile} ${className}`}><Icon className="size-6" /></span>;
+  return <span aria-hidden="true" className={`grid shrink-0 place-items-center rounded-xl border-2 border-primary ${tile} ${className}`}><Icon className="size-6" /></span>;
 }
 
 /** Schematic campus map placeholder. Children are absolutely positioned pins (0–100 coords). */

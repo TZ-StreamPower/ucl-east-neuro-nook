@@ -45,3 +45,7 @@
 
 ## 2026-11-17 Campus game showcase
 - Playwright 375x812, 393x852: Campus shows "Same Day, Three Paths" card above results; Start experience (48px) opens game overlay; Back to Campus closes it; no horizontal overflow; 0 page errors. Vitest passes.
+
+## 2026-11-17 Visual pass + iPhone game fit
+- Playwright 375x812, 390x844, 430x932 (touch): direct /?game=1 loads (was stuck on "Loading practice…") PASS; Campus Play → start → Finish here returns to Campus PASS; no horizontal overflow on /, route, place, community, saved, practice PASS; 0 page errors.
+- NOT TESTED: real iPhone Safari (notch/home bar insets), reduced-motion setting.

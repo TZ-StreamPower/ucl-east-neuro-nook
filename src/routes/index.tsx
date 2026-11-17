@@ -4,7 +4,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Search, List, Map as MapIcon, X, ArrowRight, Footprints } from "lucide-react";
 import { Shell, textLink } from "@/components/Shell";
 import { CAT_STYLE, MapCanvas, MapPin, Thumb } from "@/components/Browse";
-import { CATS, PLACES, ROUTES, ILLUSTRATIVE, DEFAULT_ROUTE, type Cat } from "@/data/demo";
+import { CATS, PLACES, ROUTES, DEFAULT_ROUTE, type Cat } from "@/data/demo";
 import { filterResults, switchView, type ResultItem, type BrowseView } from "@/lib/logic";
 import { GamePractice } from "@/components/GamePractice";
 import { GameShowcase } from "@/components/GameShowcase";
@@ -33,9 +33,9 @@ function Browse() {
   const sel = results.find((r) => `${r.kind}:${r.id}` === s.sel);
   return (
     <Shell tabs>
-      {s.game === 1 && <GamePractice backLabel="Back to Campus" onBack={() => nav({ search: (p) => ({ ...p, game: 0 }), replace: true, resetScroll: false })} onAsk={() => nav({ to: "/community/new", search: { from: "feed", route: DEFAULT_ROUTE } })} />}
-      <h1 className="sr-only">Campus</h1>
-      <label className="flex min-h-12 items-center gap-2 rounded-full border-2 border-border bg-background px-4 focus-within:border-brand">
+      {s.game === 1 && <GamePractice backLabel="Campus" onBack={() => nav({ search: (p) => ({ ...p, game: 0 }), replace: true, resetScroll: false })} onAsk={() => nav({ to: "/community/new", search: { from: "feed", route: DEFAULT_ROUTE } })} />}
+      <div><h1 className="font-display text-3xl font-bold text-primary">Campus</h1><p className="text-muted-foreground">Your campus, your pace.</p></div>
+      <label className="flex min-h-12 items-center gap-2 retro rounded-xl bg-card px-4 focus-within:ring-4 focus-within:ring-brand/40">
         <Search className="size-5 text-muted-foreground" aria-hidden="true" />
         <span className="sr-only">Search places and routes</span>
         <input value={s.q} onChange={(e) => upd({ q: e.target.value })} placeholder="Search places and routes" className="min-w-0 flex-1 bg-transparent outline-none placeholder:text-muted-foreground" />
@@ -78,20 +78,20 @@ function Browse() {
       ) : (
         <ul className="space-y-3">
           {results.map((r) => { const key = `${r.kind}:${r.id}`; return (
-            <li key={key}><ItemLink i={r} className={`flex items-center gap-3 retro rounded-2xl p-3 ${s.sel === key ? "ring-2 ring-brand" : ""}`}>
-              <Thumb cat={r.cat} route={r.kind === "route"} />
+            <li key={key}><ItemLink i={r} className={`flex items-center gap-3 retro rounded-2xl bg-card p-3 ${s.sel === key ? "ring-2 ring-brand" : ""}`}>
+              <Thumb cat={r.cat} route={r.kind === "route"} className="size-12" />
               <span className="min-w-0 flex-1"><span className="block text-xs font-bold uppercase tracking-wide text-muted-foreground">{r.kind === "route" ? "Route" : CATS.find((c) => c.id === r.cat)!.label}</span>
-                <span className="block font-bold text-primary">{r.name}</span><span className="block text-sm text-muted-foreground">{r.sub}</span></span>
+                <span className="block font-bold text-primary">{r.name}</span><span className="block truncate text-sm text-muted-foreground">{r.sub}</span></span>
               <ArrowRight className="size-4 text-primary" aria-hidden="true" />
             </ItemLink></li>); })}
         </ul>
       )}
-      <Link to="/practice" search={{ from: "home", route: DEFAULT_ROUTE }} onClick={() => store.set({ stage: 1, choice: null })} className="flex items-center gap-3 rounded-2xl bg-practice p-3">
-        <span className="grid size-12 place-items-center rounded-xl bg-background text-primary"><Footprints className="size-5" /></span>
-        <span className="flex-1"><span className="block font-display font-bold text-primary">Campus Practice</span><span className="block text-sm text-muted-foreground">Optional · practise your first arrival</span></span>
+      <Link to="/practice" search={{ from: "home", route: DEFAULT_ROUTE }} onClick={() => store.set({ stage: 1, choice: null })} className="retro flex items-center gap-3 rounded-2xl bg-accent-lime p-3">
+        <span className="sticker grid size-12 shrink-0 place-items-center bg-card text-primary"><Footprints className="size-5" /></span>
+        <span className="flex-1"><span className="block font-display font-bold text-primary">Campus Practice</span><span className="block text-sm text-muted-foreground">Optional · 2 min</span></span>
         <ArrowRight className="size-4 text-primary" />
       </Link>
-      <p className="text-xs text-muted-foreground">{ILLUSTRATIVE}</p>
+      <p className="self-start rounded-full border border-border px-2 text-xs text-muted-foreground">Illustrative</p>
     </Shell>
   );
 }
