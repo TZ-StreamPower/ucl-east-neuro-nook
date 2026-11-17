@@ -7,5 +7,5 @@
 - [x] Four extra practice scenarios (food, lecture, group, app not working)
 - [ ] Game pause / later chapters / landscape / real iPhone not yet tested
 
-- [ ] Runtime test: app → game → choices → branches → ending → restart/return, desktop + iPhone, console/network/overflow, production build (no changes)
-- [ ] Fix confirmed P0/P1 from audit + runtime test, re-test flows
+- [x] Runtime test: app → game → choices → branches → ending → restart/return, desktop + iPhone, console/network/overflow, production build (no changes)
+- [x] Fix confirmed P0/P1 from audit + runtime test, re-test flows
