@@ -35,7 +35,7 @@ export function GamePractice({ onBack, onAsk }: { onBack: () => void; onAsk: () 
                   <button className={`${bar} bg-primary text-primary-foreground`} onClick={() => { setState("loading"); setKey((k) => k + 1); }}>Retry</button></div>}
           </div>
         )}
-        <iframe key={key} title="Same Day, Three Paths — optional practice" src={GAME_URL} onLoad={() => setState("ready")} className="absolute inset-0 size-full border-0" allow="autoplay; fullscreen" />
+        <iframe key={key} title="Same Day, Three Paths — optional practice" src={GAME_URL} onLoad={(e) => { setState("ready"); try { e.currentTarget.contentDocument?.getElementById("finishButton")?.addEventListener("click", () => cb.current()); } catch { /* cross-origin: top bar still returns */ } }} className="absolute inset-0 size-full border-0" allow="autoplay; fullscreen" />
       </div>
     </section>
   );

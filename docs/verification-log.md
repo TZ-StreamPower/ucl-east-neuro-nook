@@ -30,3 +30,15 @@
 | Full map / Follow me | 393x852 | Toggle | Camera framing changes | Works | Pass |
 | Choice + feedback | 393x852 | Explore response options → pick | Info card with follow-up choices | Works, scrollable | Pass |
 | Pause, chapters 2–5, landscape, real iPhone Safari | — | — | — | Not tested | Open |
+
+## 2026-11-17 · Full runtime audit + P1 fixes (Playwright, Chromium)
+| Item | Viewport | Result | Status |
+|---|---|---|---|
+| All 5 chapters → ending, for Mei, Sam, Leila | 393x852, 375x812, 1280x900 | Every chapter progressed after 3 moments (choice → detail → confirm); ending reached for all 3 | Pass |
+| Ending → Reflect → Community → Explore another path / Play another path | same | Returns to character screen | Pass |
+| Layout overflow (welcome, character, ending, reflection, community) | same | scrollWidth = viewport | Pass |
+| Missing assets | same | storyboard_13-15.png 404 → restored both storyboard images from package; 0 failed requests after | Fixed |
+| App → Practise this arrival → start → Back to route | 393, 1280 | Scroll restored (400/381) | Pass |
+| In-game "Finish here" | 393, 1280 | Previously stayed inside the game; now returns to route | Fixed |
+| Escape / browser back close game | 393, 1280 | Close | Pass |
+| Production build, real iPhone Safari, landscape, pause, Chinese language | — | Not run | Not tested |
