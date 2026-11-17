@@ -19,3 +19,14 @@
 | Social — leaving class | Community tips | Not implemented | To develop |
 | Social — joining group discussion | Community tips | Not implemented | To develop |
 | App can't load | Help: App not working; offline banner | — | Covered (simulated) |
+
+## 2026-11-17 · Portrait game integration (Playwright, Chromium, touch)
+| Item | Viewport | Steps | Expected | Actual | Status |
+|---|---|---|---|---|---|
+| Open from route | 375x812, 393x852, 430x932 | Route → Practise this arrival | Local game loads full-screen, Back to route visible | Loaded, no horizontal scroll | Pass |
+| Return keeps place | same | Back to route | Same route, tab and scroll | Scroll 468/426/349 restored exactly | Pass |
+| Wake-up, move | 393x852 | Start → Mei → Begin → Wake up → hold → | Player moves | Moved, triggered "Route preview" cue | Pass |
+| Cue layout | 393x852 | Approach cue | Scene + controls stay usable | Was covering scene and actions → compacted in portrait.css | Fixed |
+| Full map / Follow me | 393x852 | Toggle | Camera framing changes | Works | Pass |
+| Choice + feedback | 393x852 | Explore response options → pick | Info card with follow-up choices | Works, scrollable | Pass |
+| Pause, chapters 2–5, landscape, real iPhone Safari | — | — | — | Not tested | Open |

@@ -33,5 +33,5 @@ use the editor.
 - Prototype state lives in `src/lib/store.tsx` (localStorage for saved/published, sessionStorage for step/draft/practice); pure rules in `src/lib/logic.ts` with tests — keeps logic testable without a backend.
 - Scene art is inline SVG in `src/components/scenes` so landmarks are reused between guide and Practice.
 - Route search params use `zodValidator` + `fallback` so every key stays optional for links; narrow values inside the component.
-- The full game is embedded via iframe at `/practice/game` (`practice_.game.tsx`) rather than copied in, so the team's hosted build stays the single source.
+- The portrait game is bundled in `public/game/` and opened as a full-screen iframe overlay on the route page (`?game=1`), so the route stays mounted and scroll/tab survive return; fix game layout only in `public/game/portrait.css`.
 - Acceptance evidence goes in `docs/verification-log.md`; only mark items verified with a run recorded there.
