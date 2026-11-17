@@ -1,14 +1,20 @@
-# Welcome to your Lovable project
+# UCL East Autism Community APP
+
+A community app for UCL East’s autism community, designed with a visual hierarchy informed by a game-level reference.
+
+The project information describes a community app interface guided by Markdown instructions, visual references, and an information architecture. Its design uses a low-fidelity UI prototype and considers continuity between the app and game visual levels. It is built with TanStack Start and TypeScript.
 
 This project was built with [Lovable](https://lovable.dev).
 
+**Live app**: https://ucl-east-neuro-nook.lovable.app
+
 ## Build with Lovable
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/77abe5b8-35a9-5ea0-b667-396c48d4c37e).
 
 - **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
 ## Development
 
@@ -20,10 +26,3 @@ cd <repository-name>
 npm i
 npm run dev
 ```
-
-## Built with
-
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
