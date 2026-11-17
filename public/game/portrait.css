@@ -65,3 +65,11 @@
  body.is-playing .status-footer{display:none}
  .hide-meters .meter-hud{display:none!important}
 }
+
+/* Lovable integration fixes (2026-11-17): keep cues compact so the scene and controls stay usable */
+@media(max-width:700px) and (orientation:portrait){
+ body.is-playing .topbar{display:none!important}
+ body.is-playing .proximity-cue{max-height:30dvh;bottom:calc(140px + env(safe-area-inset-bottom));padding:10px}
+ body.is-playing .proximity-thought-row,body.is-playing .proximity-cue-note{display:none}
+ body.is-playing .proximity-cue-description{margin:2px 0 6px}
+}
