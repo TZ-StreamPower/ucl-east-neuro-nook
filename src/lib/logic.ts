@@ -90,3 +90,11 @@ export function nearestCalm(g: Graph, from: string, get: (id: string) => Sensory
   const { dist } = dijkstra(g, from, (_, m) => m);
   return Object.keys(dist).filter((k) => k !== from && isCalm(get(k))).sort((a, b) => dist[a]! - dist[b]!)[0] ?? null;
 }
+
+export type View = { z: number; x: number; y: number };
+export const ZMIN = 1, ZMAX = 4;
+/** Zoom to `next` keeping screen point (px,py) fixed; transform is translate(x,y) scale(z). */
+export function zoomAt(v: View, next: number, px: number, py: number): View {
+  const z = Math.min(ZMAX, Math.max(ZMIN, next)); const k = z / v.z;
+  return { z, x: px - (px - v.x) * k, y: py - (py - v.y) * k };
+}

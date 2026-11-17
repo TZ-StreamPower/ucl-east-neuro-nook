@@ -1,8 +1,9 @@
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { MapExplorer } from "@/components/MapExplorer";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, Footprints, Leaf, Zap, Coffee, MessageSquareHeart, Flag, MapPin as PinIcon } from "lucide-react";
+import { ArrowLeft, ArrowRight, Footprints, Leaf, Zap, Coffee, MessageSquareHeart, Flag, MapPin as PinIcon, Maximize2 } from "lucide-react";
 import { Shell, Sheet, primaryBtn, secondaryBtn } from "@/components/Shell";
 import { EastBankMap } from "@/components/scenes/EastBankMap";
 import { MiniMeter, calmTone } from "@/components/SensoryMeter";
@@ -27,6 +28,8 @@ function Navigate() {
   const [tray, setTray] = useState(false); const [brk, setBrk] = useState(false); const [saved, setSaved] = useState<string | null>(null);
   const give = (k: FeedbackKind) => { st.set({ ratings: { ...st.ratings, [here.id]: applyFeedback(st.ratings[here.id], k) }, walkFb: [...st.walkFb, { id: here.id, k }] }); setSaved(FEEDBACK.find((f) => f.k === k)!.label); };
   const breakId = nearestCalm(GRAPH, here.id, st.sensory); const breakNode = breakId ? findNode(breakId) : null;
+  const [open, setOpen] = useState(false);
+  useEffect(() => { if (st.mapView.from !== from || st.mapView.to !== to || st.mapView.mode !== mode) st.set({ mapView: { ...st.mapView, from, to, mode } }); }, [from, to, mode]); // eslint-disable-line react-hooks/exhaustive-deps
   const line = path.map((id) => findNode(id)!.xy);
 
   return (
@@ -42,6 +45,7 @@ function Navigate() {
           </div>
         </div>
       )}
+      <div className="relative">
       <EastBankMap line={line} className={walking ? "aspect-square" : "aspect-[4/5]"}>
         {NODES.map((n) => { const on = path.includes(n.id); const cur = walking && n.id === here.id; return (
           <button key={n.id} aria-label={n.name} disabled={walking} onClick={() => upd({ to: n.id, step: 0 })} style={{ left: `${n.xy[0]}%`, top: `${n.xy[1]}%` }}
@@ -49,6 +53,10 @@ function Navigate() {
             <span className={`grid place-items-center rounded-full border-2 border-primary ${calmTone(st.sensory(n.id))} ${cur ? "size-9 ring-4 ring-brand" : on ? "size-6" : "size-4 opacity-80"}`}>{cur && <Footprints className="size-4 text-primary" />}</span>
           </button>); })}
       </EastBankMap>
+      <button aria-label="Expand map" onClick={() => setOpen(true)} className="retro absolute right-3 top-3 z-20 grid size-11 place-items-center rounded-xl bg-card text-primary"><Maximize2 className="size-5" /></button>
+      </div>
+      {!walking && <button onClick={() => setOpen(true)} className="retro inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-accent-lavender font-bold text-primary">Expand map <Maximize2 className="size-4" /></button>}
+      {open && <MapExplorer path={path} onRoute={(id) => upd({ to: id, step: 0, walk: 0 })} onClose={() => setOpen(false)} />}
       {!walking && <p className="flex flex-wrap gap-2 text-xs font-bold text-primary"><Key cls="bg-accent-lime" l="Calm" /><Key cls="bg-accent-yellow" l="Mixed" /><Key cls="bg-terracotta/40" l="Overwhelming" /></p>}
 
       {!plan ? <p className="rounded-xl bg-accent p-4 font-bold text-primary">No path between these places.</p> : !walking ? (

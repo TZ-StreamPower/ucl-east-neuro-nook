@@ -94,6 +94,7 @@
 
 :root {
   --radius: 0.75rem;
+  --dur-press: 120ms; --dur-select: 160ms; --dur-fade: 190ms; --dur-map: 220ms; --ease-out: cubic-bezier(.2,.7,.3,1);
   --background: oklch(1 0 0); /* white canvas for readability */
   --foreground: oklch(0.24 0.08 310); /* ink #321747 */
   --card: oklch(1 0 0);
@@ -197,7 +198,13 @@
 }
 
 /* Retro outline baseline: dark border + small hard shadow */
-@utility retro { border: 2px solid var(--primary); box-shadow: 3px 3px 0 0 var(--primary); }
+@utility retro { border: 2px solid var(--primary); box-shadow: 3px 3px 0 0 var(--primary); transition: transform var(--dur-press) var(--ease-out), box-shadow var(--dur-press) var(--ease-out), background-color var(--dur-select) var(--ease-out);
+  &:is(button, a):active:not(:disabled) { transform: translate(3px, 3px) scale(.98); box-shadow: 0 0 0 0 var(--primary); } }
+@utility press { transition: transform var(--dur-press) var(--ease-out); &:active:not(:disabled) { transform: translateY(2px) scale(.98); } }
+@utility pop { animation: pop var(--dur-select) var(--ease-out); }
+@utility map-open { animation: mapopen var(--dur-map) var(--ease-out); }
+@keyframes pop { from { transform: scale(.8) } to { transform: scale(1) } }
+@keyframes mapopen { from { opacity: 0; transform: scale(.96) } to { opacity: 1; transform: none } }
 @utility sticker { border: 2px solid var(--primary); border-radius: 9999px; box-shadow: 2px 2px 0 0 var(--primary); }
 @utility fade-in { animation: fadein .2s ease-out; @media (prefers-reduced-motion: reduce) { animation: none; } }
 @keyframes fadein { from { opacity: 0 } to { opacity: 1 } }

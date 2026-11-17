@@ -28,11 +28,12 @@ export function Shell({ back, title, tabs, practice, children, footer }: {
 }
 
 function Tabs() {
+  const { mapView: m } = useStore();
   const items = [{ to: "/", l: "Campus", I: Compass }, { to: "/navigate", l: "Navigate", I: Navigation }, { to: "/community", l: "Community", I: MessageCircle }, { to: "/saved", l: "Saved", I: Bookmark }] as const;
   return (
     <nav aria-label="Main" className="pb-safe sticky bottom-0 grid grid-cols-4 border-t-2 border-primary bg-background px-5">
       {items.map(({ to, l, I }) => (
-        <Link key={to} to={to} activeOptions={{ exact: to === "/" }} className="group flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-bold text-muted-foreground data-[status=active]:text-primary">
+        <Link key={to} to={to} {...(to === "/navigate" ? { search: { from: m.from ?? "stratford", to: m.to ?? "marshgate", mode: m.mode ?? "calm" } } : {})} activeOptions={{ exact: to === "/" }} className="group flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-bold text-muted-foreground data-[status=active]:text-primary">
           <span className="grid h-7 w-12 place-items-center rounded-full group-data-[status=active]:sticker group-data-[status=active]:bg-accent-lavender"><I className="size-5" /></span>{l}
         </Link>
       ))}

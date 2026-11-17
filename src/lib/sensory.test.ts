@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { combineRating, applyFeedback, matchesFeel, planRoute, nearestCalm, type Sensory, type Graph } from "./logic";
+import { combineRating, applyFeedback, matchesFeel, planRoute, nearestCalm, zoomAt, type Sensory, type Graph } from "./logic";
 const S = (noise: number, calm: number, extra: Partial<Sensory> = {}): Sensory => ({ noise, calm, light: "ok", busy: "free", n: 4, ...extra });
 const g: Graph = [{ a: "stn", b: "bridge", min: 4 }, { a: "bridge", b: "plaza", min: 5 }, { a: "plaza", b: "mg", min: 3 }, { a: "bridge", b: "river", min: 7 }, { a: "river", b: "mg", min: 4 }];
 const seeds: Record<string, Sensory> = { stn: S(4, 2), bridge: S(3, 3), plaza: S(5, 1), river: S(1, 5), mg: S(2, 4) };
@@ -15,4 +15,8 @@ describe("calm navigation", () => {
   it("quickest goes through the loud plaza (12 min)", () => expect(planRoute(g, "stn", "mg", "quick", get)).toEqual({ path: ["stn", "bridge", "plaza", "mg"], minutes: 12 }));
   it("calmest skips the noise-5 plaza (15 min)", () => expect(planRoute(g, "stn", "mg", "calm", get)).toEqual({ path: ["stn", "bridge", "river", "mg"], minutes: 15 }));
   it("need a break finds the nearest calm space", () => expect(nearestCalm(g, "plaza", get)).toBe("mg"));
+});
+describe("map zoom", () => {
+  it("zooming keeps the anchor point fixed", () => { const v = zoomAt({ z: 1, x: 0, y: 0 }, 2, 100, 50); expect((100 - v.x) / v.z).toBe(100); expect((50 - v.y) / v.z).toBe(50); });
+  it("zoom is clamped to 1–4", () => { expect(zoomAt({ z: 3, x: 0, y: 0 }, 9, 0, 0).z).toBe(4); expect(zoomAt({ z: 1, x: 0, y: 0 }, 0.2, 0, 0).z).toBe(1); });
 });

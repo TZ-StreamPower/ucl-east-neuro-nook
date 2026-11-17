@@ -52,3 +52,7 @@
 
 ## 2026-11-17 · White canvas, sensory ratings, Navigate
 Playwright 393×852 (/tmp/browser/nav/check_nav.py): Stratford→Marshgate calmest 16 min avoids Orbit plaza, quickest 12 min; walk → "Too loud" feedback saved; "I need a break" → Go there restarts walk; Quiet study room rated (Preview→Confirm, "includes yours"); Campus "Quiet" filter → 5 results; no overflow, 0 page errors. Unit tests: src/lib/sensory.test.ts (8). Not tested: real iPhone, final graphic assets.
+
+## 2026-11-17 · Expandable map, category story cards, micro-interactions
+Playwright (/tmp/browser/nav/check_map.py) at 375/390/430×852: Food/Study/Support/Buildings each show their own story title; Play opens the game; Explore map opens, Zoom in ×2 + drag changes transform; tapping Orbit plaza opens its sheet; Route here sets destination; Campus → Navigate keeps destination and restores the same zoom/pan; no overflow, 0 page errors. prefers-reduced-motion → cover transition 0s. Unit tests 31 pass (zoomAt anchor + clamp).
+Not tested: real two-finger pinch on a device, real iPhone Safari.

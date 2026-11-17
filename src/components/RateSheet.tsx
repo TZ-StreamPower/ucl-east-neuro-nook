@@ -4,7 +4,7 @@ import { Sheet, primaryBtn, secondaryBtn } from "@/components/Shell";
 import { LIGHT, BUSY, SensoryCard } from "@/components/SensoryMeter";
 import { combineRating, type MyRating, type Light, type Busy, type Sensory } from "@/lib/logic";
 
-const opt = "grid min-h-11 min-w-11 place-items-center rounded-xl border-2 border-primary px-2 text-sm font-bold text-primary aria-pressed:bg-accent-lavender aria-pressed:ring-[3px] aria-pressed:ring-brand";
+const opt = "press relative grid min-h-11 min-w-11 place-items-center rounded-xl border-2 border-primary px-2 text-sm font-bold text-primary aria-pressed:bg-accent-lavender aria-pressed:ring-[3px] aria-pressed:ring-brand aria-pressed:after:absolute aria-pressed:after:-right-1.5 aria-pressed:after:-top-1.5 aria-pressed:after:grid aria-pressed:after:size-5 aria-pressed:after:place-items-center aria-pressed:after:rounded-full aria-pressed:after:bg-primary aria-pressed:after:text-[11px] aria-pressed:after:text-primary-foreground aria-pressed:after:content-['✓']";
 export function RateSheet({ name, seed, initial, onSave, onClose }: { name: string; seed: Sensory; initial?: MyRating | undefined; onSave: (r: MyRating) => void; onClose: () => void }) {
   const [r, setR] = useState<MyRating>(initial ?? {}); const [preview, setPreview] = useState(false);
   const u = (p: MyRating) => setR((x) => ({ ...x, ...p }));
@@ -24,7 +24,7 @@ export function RateSheet({ name, seed, initial, onSave, onClose }: { name: stri
         {(Object.keys(LIGHT) as Light[]).map((k) => { const L = LIGHT[k]; return <button key={k} aria-pressed={r.light === k} onClick={() => u({ light: k })} className={`${opt} flex-1 gap-0.5`}><L.I className="size-5" aria-hidden="true" />{L.l}</button>; })}
       </Row>
       <Row label="How calm did it feel?" icon={<Star className="size-4" />}>
-        {[1, 2, 3, 4, 5].map((n) => <button key={n} aria-label={`Calm ${n} of 5`} aria-pressed={r.calm === n} onClick={() => u({ calm: n })} className="grid size-11 place-items-center rounded-full"><Star className={`size-8 ${r.calm && n <= r.calm ? "fill-accent-yellow text-primary" : "text-border"}`} aria-hidden="true" /></button>)}
+        {[1, 2, 3, 4, 5].map((n) => <button key={n} aria-label={`Calm ${n} of 5`} aria-pressed={r.calm === n} onClick={() => u({ calm: n })} className="grid size-11 place-items-center rounded-full"><Star key={String(r.calm && n <= r.calm)} className={`size-8 ${r.calm && n <= r.calm ? "pop fill-accent-yellow text-primary" : "text-border"}`} aria-hidden="true" /></button>)}
       </Row>
       <Row label="Space right now">
         {(Object.keys(BUSY) as Busy[]).map((k) => <button key={k} aria-pressed={r.busy === k} onClick={() => u({ busy: k })} className={`${opt} flex-1 ${BUSY[k].cls}`}>{BUSY[k].l}</button>)}

@@ -1,7 +1,7 @@
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Search, List, Map as MapIcon, X, ArrowRight, Footprints } from "lucide-react";
+import { Check, Search, List, Map as MapIcon, X, ArrowRight, Footprints } from "lucide-react";
 import { Shell, textLink } from "@/components/Shell";
 import { CAT_STYLE, MapCanvas, MapPin, Thumb } from "@/components/Browse";
 import { CATS, PLACES, ROUTES, DEFAULT_ROUTE, type Cat } from "@/data/demo";
@@ -47,8 +47,8 @@ function Browse() {
       </label>
       <div role="group" aria-label="Categories" className="-mx-5 flex gap-3 overflow-x-auto px-5 pb-1">
         {([{ id: "all", label: "All" }, ...CATS] as const).map((c) => { const { I, tile } = CAT_STYLE[c.id]; const on = s.cat === c.id; return (
-          <button key={c.id} aria-pressed={on} onClick={() => upd({ cat: c.id })} className="flex w-16 shrink-0 flex-col items-center gap-1 rounded-xl py-1 text-xs font-bold text-primary">
-            <span className={`grid size-12 place-items-center rounded-2xl border-2 border-primary ${tile} ${on ? "ring-[3px] ring-brand" : ""}`}><I className="size-5" /></span>
+          <button key={c.id} aria-pressed={on} onClick={() => upd({ cat: c.id })} className="press flex w-16 shrink-0 flex-col items-center gap-1 rounded-xl py-1 text-xs font-bold text-primary">
+            <span className={`relative grid size-12 place-items-center rounded-2xl border-2 border-primary transition-shadow duration-[var(--dur-select)] ${tile} ${on ? "ring-[3px] ring-brand" : ""}`}><I className="size-5" />{on && <span className="pop sticker absolute -right-1.5 -top-1.5 grid size-5 place-items-center bg-card"><Check className="size-3" aria-hidden="true" /></span>}</span>
             <span className={on ? "text-brand" : ""}>{c.label}</span>
           </button>); })}
       </div>
@@ -56,7 +56,7 @@ function Browse() {
         {([["quiet", "Quiet"], ["soft-light", "Soft light"], ["not-busy", "Not busy"]] as const).map(([f, l]) => (
           <button key={f} aria-pressed={feel.includes(f)} onClick={() => toggleFeel(f)} className="retro inline-flex min-h-11 shrink-0 items-center rounded-full bg-card px-4 text-sm font-bold text-primary aria-pressed:bg-accent-lime">{l}</button>))}
       </div>
-      <GameShowcase />
+      <GameShowcase cat={s.cat} />
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground" role="status">{results.length} {results.length === 1 ? "result" : "results"}</p>
         <div role="group" aria-label="View" className="flex rounded-full border border-border p-0.5">

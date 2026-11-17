@@ -10,7 +10,7 @@ import { visibleNotes } from "@/lib/logic";
 import { allPosts, toCard } from "@/lib/posts";
 import { pageHead } from "@/lib/head";
 import { useState } from "react";
-import { Star } from "lucide-react";
+import { Star, Check } from "lucide-react";
 import { SensoryCard } from "@/components/SensoryMeter";
 import { RateSheet } from "@/components/RateSheet";
 import { SEED, DEFAULT_SENSORY } from "@/data/sensory";
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/place/$id")({
 function PlacePage() {
   const p = Route.useLoaderData(); const s = useStore(); const { I } = CAT_STYLE[p.cat];
   const routes = ROUTES.filter((r) => r.toPlace === p.id || r.from === p.name);
-  const [rate, setRate] = useState(false);
+  const [rate, setRate] = useState(false); const [done, setDone] = useState(false);
   const posts = allPosts(s.questions).filter((x) => x.placeId === p.id);
   return (
     <Shell back={<Link to="/" className={backCls}><ChevronLeft className="size-4" />Campus</Link>}>
@@ -28,10 +28,10 @@ function PlacePage() {
       <div className="flex items-start gap-3"><Thumb cat={p.cat} className="size-12" />
         <div><p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{CATS.find((c) => c.id === p.cat)!.label}</p><Heading>{p.name}</Heading><p className="text-muted-foreground">{p.sub}</p></div></div>
       <SaveShare item={{ kind: "place", id: p.id }} />
-      <section className="space-y-2"><h2 className="font-bold text-primary">How it feels</h2>
+      <section className="space-y-2"><h2 className="flex items-center gap-2 font-bold text-primary">How it feels{done && <span role="status" className="pop sticker inline-flex items-center gap-1 bg-accent-lime px-2 text-xs"><Check className="size-3.5" aria-hidden="true" />Rating saved</span>}</h2>
         <SensoryCard s={s.sensory(p.id)} mine={!!s.ratings[p.id]} />
         <button className={primaryBtn} onClick={() => setRate(true)}>{s.ratings[p.id] ? "Update your rating" : "Rate this space"} <Star className="size-4" /></button></section>
-      {rate && <RateSheet name={p.name} seed={SEED[p.id] ?? DEFAULT_SENSORY} initial={s.ratings[p.id]} onSave={(r) => s.set({ ratings: { ...s.ratings, [p.id]: r } })} onClose={() => setRate(false)} />}
+      {rate && <RateSheet name={p.name} seed={SEED[p.id] ?? DEFAULT_SENSORY} initial={s.ratings[p.id]} onSave={(r) => { s.set({ ratings: { ...s.ratings, [p.id]: r } }); setDone(true); }} onClose={() => setRate(false)} />}
       <section className="space-y-2"><h2 className="flex items-center gap-2 font-bold text-primary">Arrival information <span className="rounded-full bg-accent px-2 text-xs">Illustrative</span></h2>
         <ul className="list-disc space-y-1 pl-5">{visibleNotes(p.notes, s.prefs.detail).map((n) => <li key={n}>{n}</li>)}</ul></section>
       <section className="space-y-2"><h2 className="font-bold text-primary">Plan a route</h2>

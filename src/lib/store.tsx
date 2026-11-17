@@ -4,8 +4,8 @@ import type { ChoiceId } from "@/data/demo";
 import { SEED, DEFAULT_SENSORY } from "@/data/sensory";
 export type WalkFb = { id: string; k: FeedbackKind };
 
-type S = { saved: SavedRef[]; questions: Question[]; replies: Record<string, string[]>; steps: Record<string, number>; draft: string; choice: ChoiceId | null; stage: 1 | 2 | 3; prefs: Prefs; kept: KeptDraft; reports: string[]; offline: boolean; ratings: Record<string, MyRating>; walkFb: WalkFb[] };
-const init: S = { saved: [], questions: [], replies: {}, steps: {}, draft: "", choice: null, stage: 1, prefs: DEFAULT_PREFS, kept: null, reports: [], offline: false, ratings: {}, walkFb: [] };
+type S = { saved: SavedRef[]; questions: Question[]; replies: Record<string, string[]>; steps: Record<string, number>; draft: string; choice: ChoiceId | null; stage: 1 | 2 | 3; prefs: Prefs; kept: KeptDraft; reports: string[]; offline: boolean; ratings: Record<string, MyRating>; walkFb: WalkFb[]; mapView: { z: number; x: number; y: number; pin: string | null; from?: string; to?: string; mode?: string } };
+const init: S = { saved: [], questions: [], replies: {}, steps: {}, draft: "", choice: null, stage: 1, prefs: DEFAULT_PREFS, kept: null, reports: [], offline: false, ratings: {}, walkFb: [], mapView: { z: 1, x: 0, y: 0, pin: null } };
 type Ctx = S & { set: (p: Partial<S>) => void; publish: (t: string, routeId: string) => string; reply: (postId: string, t: string) => void; sensory: (id: string) => Sensory };
 const C = createContext<Ctx | null>(null);
 
@@ -20,9 +20,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, []);
   useEffect(() => {
     if (!ready) return;
-    const { saved, questions, replies, steps, draft, choice, stage, prefs, kept, reports, offline, ratings, walkFb } = s;
+    const { saved, questions, replies, steps, draft, choice, stage, prefs, kept, reports, offline, ratings, walkFb, mapView } = s;
     localStorage.setItem("ucl-local-v2", JSON.stringify({ saved, questions, replies, prefs, kept, reports, ratings, walkFb }));
-    sessionStorage.setItem("ucl-session-v2", JSON.stringify({ steps, draft, choice, stage, offline }));
+    sessionStorage.setItem("ucl-session-v2", JSON.stringify({ steps, draft, choice, stage, offline, mapView }));
     document.documentElement.classList.toggle("reduce-motion", prefs.reduceMotion);
   }, [s, ready]);
   const set = (p: Partial<S>) => setS((x) => ({ ...x, ...p }));
