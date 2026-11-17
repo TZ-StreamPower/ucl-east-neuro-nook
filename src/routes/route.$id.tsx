@@ -8,7 +8,8 @@ import { MapCanvas, MapPin } from "@/components/Browse";
 import { SaveShare } from "@/components/SaveShare";
 import { ExpectRows } from "@/components/ExpectRows";
 import { PostCard } from "@/components/PostCard";
-import { findRoute, ILLUSTRATIVE, VISIT_US , DEFAULT_ROUTE} from "@/data/demo";
+import { GamePractice } from "@/components/GamePractice";
+import { findRoute, ILLUSTRATIVE, VISIT_US, DEFAULT_ROUTE, STARTER_DRAFT } from "@/data/demo";
 import { availableOffline } from "@/lib/logic";
 import { useStore } from "@/lib/store";
 import { allPosts, toCard } from "@/lib/posts";
@@ -17,15 +18,18 @@ import { pageHead } from "@/lib/head";
 type Tab = "overview" | "expect" | "community";
 const TABS: { id: Tab; l: string }[] = [{ id: "overview", l: "Overview" }, { id: "expect", l: "What to expect" }, { id: "community", l: "Community" }];
 export const Route = createFileRoute("/route/$id")({
-  validateSearch: zodValidator(z.object({ tab: fallback(z.string(), "overview").default("overview") })),
+  validateSearch: zodValidator(z.object({ tab: fallback(z.string(), "overview").default("overview"), game: fallback(z.number(), 0).default(0) })),
   loader: ({ params }) => { const r = findRoute(params.id); if (!r) throw notFound(); return r; },
   head: pageHead("Route preview · UCL East Community", "Example campus route with landmarks, what to expect and discussion."), component: Preview });
 function Preview() {
-  const r = Route.useLoaderData(); const raw = Route.useSearch().tab; const tab: Tab = raw === "expect" || raw === "community" ? raw : "overview"; const s = useStore(); const nav = useNavigate();
+  const r = Route.useLoaderData(); const sp = Route.useSearch(); const raw = sp.tab; const gameOpen = sp.game === 1; const tab: Tab = raw === "expect" || raw === "community" ? raw : "overview"; const s = useStore(); const nav = useNavigate();
   const [pin, setPin] = useState<number | null>(null);
   const resume = s.steps[r.id] !== undefined;
   const posts = allPosts(s.questions).filter((p) => p.routeId === r.id);
-  return (
+  const closeGame = () => window.history.back();
+  const ask = () => { s.set({ draft: s.draft || STARTER_DRAFT }); nav({ to: "/community/new", search: { from: "practice", route: r.id } }); };
+  return (<>
+    {gameOpen && <GamePractice onBack={closeGame} onAsk={ask} />}
     <Shell back={<Link to="/" className={backCls}><ChevronLeft className="size-4" />Campus</Link>}
       footer={<Link to="/route/$id/steps" params={{ id: r.id }} className={primaryBtn}>{resume ? `Resume directions · step ${s.steps[r.id]! + 1}` : "Start directions"} <ArrowRight className="size-4" /></Link>}>
       <MapCanvas line={r.steps.map((x) => x.landmark.xy)}>
@@ -39,7 +43,7 @@ function Preview() {
       {s.prefs.routePref !== "none" && <p className="text-xs text-muted-foreground">Your preference: {s.prefs.routePref === "step-free" ? "step-free" : "fewer crowds"}. Not verified for this example route.</p>}
       <div role="tablist" aria-label="Route details" className="grid grid-cols-3 border-b border-border">
         {TABS.map((t) => (
-          <Link key={t.id} role="tab" aria-selected={tab === t.id} to="/route/$id" params={{ id: r.id }} search={{ tab: t.id }} replace
+          <Link key={t.id} role="tab" aria-selected={tab === t.id} to="/route/$id" params={{ id: r.id }} search={{ tab: t.id, game: 0 }} replace resetScroll={false}
             className={`flex min-h-12 items-center justify-center border-b-[3px] px-1 text-center text-sm font-bold ${tab === t.id ? "border-brand text-brand" : "border-transparent text-muted-foreground"}`}>{t.l}</Link>
         ))}
       </div>
@@ -47,9 +51,10 @@ function Preview() {
         {tab === "overview" && <>
           <p>{r.summary}</p>
           <ol className="space-y-2">{r.steps.map((x, i) => <li key={i} className="flex gap-3"><span className="grid size-7 shrink-0 place-items-center rounded-full bg-primary text-xs font-bold text-primary-foreground">{i + 1}</span><span><b className="text-primary">{x.title}.</b> {x.text}</span></li>)}</ol>
-          <Link to="/practice" search={{ from: "route", route: r.id }} onClick={() => s.set({ stage: 1, choice: null })} className="flex items-center gap-3 rounded-2xl bg-practice p-3">
+          <Link to="/route/$id" params={{ id: r.id }} search={{ tab, game: 1 }} resetScroll={false} className="retro flex items-center gap-3 rounded-2xl bg-practice p-3">
             <span className="grid size-12 place-items-center rounded-xl bg-background text-primary"><Footprints className="size-5" /></span>
-            <span className="flex-1"><span className="block font-display font-bold text-primary">Practise this arrival</span><span className="block text-sm text-muted-foreground">Optional · try the first moments before you go</span></span><ArrowRight className="size-4 text-primary" /></Link>
+            <span className="flex-1"><span className="block font-display font-bold text-primary">Practise this arrival</span><span className="block text-sm text-muted-foreground">Optional game · choices stay private</span></span><ArrowRight className="size-4 text-primary" /></Link>
+          <Link to="/practice" search={{ from: "route", route: r.id }} onClick={() => s.set({ stage: 1, choice: null })} className="text-sm font-bold text-primary underline">Quick practice without the game</Link>
           <a href={VISIT_US} target="_blank" rel="noreferrer" className="text-sm font-bold text-primary underline">Official UCL East Visit Us page</a>
         </>}
         {tab === "expect" && <ExpectRows rows={r.expect} />}

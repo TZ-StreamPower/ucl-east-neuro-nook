@@ -67,7 +67,7 @@ export const findPlace = (id: string) => PLACES.find((p) => p.id === id);
 export const findRoute = (id: string) => ROUTES.find((r) => r.id === id);
 
 export const VISIT_US = "https://www.ucl.ac.uk/engage/ucl-east/about-ucl-east/visit-us";
-export const GAME_URL = "https://same-day-three-paths-team6.pages.dev";
+export const GAME_URL = "/game/index.html";
 export const PRACTICE_SITUATION = "You leave the station and the area around the exit feels busy. What would you like to do?";
 export type ChoiceId = "continue" | "map" | "calm";
 export const CHOICES: { id: ChoiceId; label: string; full: string; feedback: string }[] = [
