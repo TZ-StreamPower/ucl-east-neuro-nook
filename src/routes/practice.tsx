@@ -4,7 +4,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, ArrowUp, ExternalLink, ChevronLeft } from "lucide-react";
 import { Shell, Heading, backCls, primaryBtn, secondaryBtn, textLink } from "@/components/Shell";
 import { PracticeScene } from "@/components/scenes/Scene";
-import { CHOICES, PRACTICE_SITUATION, STARTER_DRAFT, GAME_URL, ILLUSTRATIVE, DEFAULT_ROUTE, findRoute } from "@/data/demo";
+import { CHOICES, PRACTICE_SITUATION, STARTER_DRAFT, ILLUSTRATIVE, DEFAULT_ROUTE, findRoute } from "@/data/demo";
 import { useStore } from "@/lib/store";
 import { practiceExit, type PracticeFrom } from "@/lib/logic";
 import { pageHead } from "@/lib/head";
@@ -24,10 +24,11 @@ function Practice() {
     <Shell {...shell}>
       {stageBar}
       <Heading display>Leaving the station</Heading>
+      <p className="rounded-lg bg-background p-3 text-sm">Optional practice. Your choices stay private and are never posted. You can exit at any time.</p>
       <PracticeScene choice={null} />
       <p className="text-lg">The exit feels busy. Your next landmark is {r.steps[1]!.landmark.name.toLowerCase()}.</p>
       <button className={primaryBtn} onClick={() => s.set({ stage: 2 })}>Explore choices <ArrowRight className="size-4" /></button>
-      <a href={GAME_URL} target="_blank" rel="noreferrer" className={textLink}>Open full game <ExternalLink className="size-4" /></a>
+      <Link to="/practice/game" search={{ route }} className={textLink}>Open the game <ExternalLink className="size-4" /></Link>
       <p className="text-sm text-muted-foreground">{ILLUSTRATIVE}</p>
     </Shell>
   );
@@ -52,7 +53,7 @@ function Practice() {
             </button>
           ))}
         </div>
-        <a href={GAME_URL} target="_blank" rel="noreferrer" className={textLink}>Open full game <ExternalLink className="size-4" /></a>
+        <Link to="/practice/game" search={{ route }} className={textLink}>Open the game <ExternalLink className="size-4" /></Link>
       </>)}
     </Shell>
   );
