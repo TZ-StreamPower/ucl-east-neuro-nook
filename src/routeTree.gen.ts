@@ -21,6 +21,7 @@ import { Route as PracticeGameRouteImport } from './routes/practice_.game'
 import { Route as RouteIdRouteImport } from './routes/route.$id'
 import { Route as RoutePreviewRouteImport } from './routes/route.preview'
 import { Route as RouteStepsRouteImport } from './routes/route.steps'
+import { Route as PracticeScenarioIdRouteImport } from './routes/practice_.scenario.$id'
 import { Route as RouteIdStepsRouteImport } from './routes/route.$id_.steps'
 
 const IndexRoute = IndexRouteImport.update({
@@ -83,6 +84,11 @@ const RouteStepsRoute = RouteStepsRouteImport.update({
   path: '/route/steps',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PracticeScenarioIdRoute = PracticeScenarioIdRouteImport.update({
+  id: '/practice_/scenario/$id',
+  path: '/practice/scenario/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RouteIdStepsRoute = RouteIdStepsRouteImport.update({
   id: '/route/$id_/steps',
   path: '/route/$id/steps',
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/route/preview': typeof RoutePreviewRoute
   '/route/steps': typeof RouteStepsRoute
   '/community/': typeof CommunityIndexRoute
+  '/practice/scenario/$id': typeof PracticeScenarioIdRoute
   '/route/$id/steps': typeof RouteIdStepsRoute
 }
 export interface FileRoutesByTo {
@@ -117,6 +124,7 @@ export interface FileRoutesByTo {
   '/route/preview': typeof RoutePreviewRoute
   '/route/steps': typeof RouteStepsRoute
   '/community': typeof CommunityIndexRoute
+  '/practice/scenario/$id': typeof PracticeScenarioIdRoute
   '/route/$id/steps': typeof RouteIdStepsRoute
 }
 export interface FileRoutesById {
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/route/preview': typeof RoutePreviewRoute
   '/route/steps': typeof RouteStepsRoute
   '/community/': typeof CommunityIndexRoute
+  '/practice_/scenario/$id': typeof PracticeScenarioIdRoute
   '/route/$id_/steps': typeof RouteIdStepsRoute
 }
 export interface FileRouteTypes {
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
     | '/route/preview'
     | '/route/steps'
     | '/community/'
+    | '/practice/scenario/$id'
     | '/route/$id/steps'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
     | '/route/preview'
     | '/route/steps'
     | '/community'
+    | '/practice/scenario/$id'
     | '/route/$id/steps'
   id:
     | '__root__'
@@ -180,6 +191,7 @@ export interface FileRouteTypes {
     | '/route/preview'
     | '/route/steps'
     | '/community/'
+    | '/practice_/scenario/$id'
     | '/route/$id_/steps'
   fileRoutesById: FileRoutesById
 }
@@ -196,6 +208,7 @@ export interface RootRouteChildren {
   RoutePreviewRoute: typeof RoutePreviewRoute
   RouteStepsRoute: typeof RouteStepsRoute
   CommunityIndexRoute: typeof CommunityIndexRoute
+  PracticeScenarioIdRoute: typeof PracticeScenarioIdRoute
   RouteIdStepsRoute: typeof RouteIdStepsRoute
 }
 
@@ -285,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RouteStepsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/practice_/scenario/$id': {
+      id: '/practice_/scenario/$id'
+      path: '/practice/scenario/$id'
+      fullPath: '/practice/scenario/$id'
+      preLoaderRoute: typeof PracticeScenarioIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/route/$id_/steps': {
       id: '/route/$id_/steps'
       path: '/route/$id/steps'
@@ -308,6 +328,7 @@ const rootRouteChildren: RootRouteChildren = {
   RoutePreviewRoute: RoutePreviewRoute,
   RouteStepsRoute: RouteStepsRoute,
   CommunityIndexRoute: CommunityIndexRoute,
+  PracticeScenarioIdRoute: PracticeScenarioIdRoute,
   RouteIdStepsRoute: RouteIdStepsRoute,
 }
 export const routeTree = rootRouteImport

@@ -89,3 +89,24 @@ export const POSTS: Post[] = [
 ];
 export const postContext = (p: { routeId?: string; placeId?: string }) =>
   (p.routeId && findRoute(p.routeId)?.name) || (p.placeId && findPlace(p.placeId)?.name) || "UCL East";
+
+export type Scenario = { id: string; title: string; situation: string; options: { label: string; feedback: string }[]; nextStep: string };
+export const SCENARIOS: Scenario[] = [
+  { id: "food", title: "Ordering food", situation: "The canteen queue is long and loud. You're not sure how to order.", options: [
+    { label: "Watch first", feedback: "Watching one order first is a fair way to learn the steps." },
+    { label: "Ask staff", feedback: "Staff expect questions. A short 'How do I order?' is enough." },
+    { label: "Come back later", feedback: "Quieter times are fine too. Late lunch is often calmer." }], nextStep: "Save a quieter café nearby, or ask students when it's calm." },
+  { id: "lecture", title: "Leaving a lecture", situation: "The lecture ends and everyone moves to the doors at once.", options: [
+    { label: "Wait a minute", feedback: "Letting the crowd pass first is a normal choice." },
+    { label: "Use another exit", feedback: "Rooms often have a second door. Check it next time you arrive." },
+    { label: "Ask a classmate", feedback: "Asking someone where they're heading can make the next step easier." }], nextStep: "Ask the community about quieter exits for your building." },
+  { id: "group", title: "Group discussion", situation: "Your group starts talking fast and you missed what to do.", options: [
+    { label: "Ask to repeat", feedback: "'Could you say the task again?' helps others too." },
+    { label: "Check the brief", feedback: "Re-reading the task quietly is a good way back in." },
+    { label: "Message later", feedback: "Following up in writing afterwards is fine." }], nextStep: "Share how you like to contribute, if you want to." },
+  { id: "app", title: "App not working", situation: "Your phone loses signal and the map won't load.", options: [
+    { label: "Find Wi-Fi", feedback: "eduroam works across UCL buildings." },
+    { label: "Go to a staff desk", feedback: "Reception can point you the right way." },
+    { label: "Ask a student", feedback: "Most students are happy to point you to a building." }], nextStep: "Save your route so it's available offline." },
+];
+export const findScenario = (id: string) => SCENARIOS.find((s) => s.id === id);

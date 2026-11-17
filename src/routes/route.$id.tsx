@@ -26,7 +26,7 @@ function Preview() {
   const [pin, setPin] = useState<number | null>(null);
   const resume = s.steps[r.id] !== undefined;
   const posts = allPosts(s.questions).filter((p) => p.routeId === r.id);
-  const closeGame = () => window.history.back();
+  const closeGame = () => nav({ to: "/route/$id", params: { id: r.id }, search: { tab, game: 0 }, replace: true, resetScroll: false });
   const ask = () => { s.set({ draft: s.draft || STARTER_DRAFT }); nav({ to: "/community/new", search: { from: "practice", route: r.id } }); };
   return (<>
     {gameOpen && <GamePractice onBack={closeGame} onAsk={ask} />}
@@ -71,5 +71,5 @@ function Preview() {
         </Sheet>
       )}
     </Shell>
-  );
+  </>);
 }
