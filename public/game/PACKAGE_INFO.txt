@@ -1,0 +1,22 @@
+Team 6 — Same Day, Three Paths
+Editable source package
+Prepared: 16 November 2026
+
+Run the game
+1. Extract this folder.
+2. Open index.html in a browser.
+3. If your browser blocks local files, run: python3 -m http.server 8765
+   from this folder, then open http://127.0.0.1:8765/
+
+Main source files
+- index.html: page structure and load order
+- game.js: game state, scenes, story, choices, interaction and language content
+- style.css and skin.css: layout and visual design
+- assets/: scene art, sprites, ambient visuals, textures and art configuration
+
+The package includes the editable browser project and key project notes. It excludes backup snapshots, the previous standalone export, and automated playtest scripts/evidence.
+
+Public playable version:
+https://same-day-three-paths-team6.pages.dev/
+
+This is a student prototype. The campus scenes are illustrative composites, not verified live directions. Leila remains provisional. The existing project notes describe testing and research limitations.
