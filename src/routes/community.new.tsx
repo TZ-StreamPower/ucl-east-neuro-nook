@@ -35,7 +35,7 @@ function Composer() {
         <label className="font-bold text-primary" htmlFor="q">Your question</label>
         <textarea id="q" rows={4} value={s.draft} onChange={(e) => { s.set({ draft: e.target.value }); setErr(false); }} aria-invalid={err} aria-describedby={err ? "qerr" : undefined} className="rounded-lg border border-input p-3" />
         {err && <p id="qerr" className="text-destructive">Write a question before previewing.</p>}
-        <p className="text-sm text-muted-foreground">Audience · This prototype only</p>
+        <p className="rounded-lg bg-accent p-2 text-sm font-bold">Local demo only · not visible to other students</p>
         <button className={primaryBtn} onClick={() => canPublish(s.draft) ? setPreview(true) : setErr(true)}>Preview question <ArrowRight className="size-4" /></button>
         <div className="flex flex-wrap gap-x-4">
           <button className={textLink} disabled={!canPublish(s.draft)} onClick={() => { s.set({ kept: keepDraft(s.draft, route), draft: "" }); leave(); }}>Keep draft for later</button>
