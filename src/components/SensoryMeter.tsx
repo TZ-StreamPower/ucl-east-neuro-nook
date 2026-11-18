@@ -29,7 +29,7 @@ export function SensoryCard({ s, mine }: { s: Sensory; mine?: boolean }) {
       <Tile icon={<Volume2 className="size-5" />} label="Quietness"><Stars value={6 - s.noise} label="Quietness" /></Tile>
       <Tile icon={<Star className="size-5" />} label="Calm"><Stars value={s.calm} label="Calm" /></Tile>
       <Tile icon={<L.I className="size-5" />} label="Lighting"><span className="font-bold">{L.l}</span></Tile>
-      <Tile icon={<Users className="size-5" />} label="Right now" cls={BUSY[s.busy].cls}><span className="font-bold">{BUSY[s.busy].l}</span></Tile>
+      <Tile icon={<Users className="size-5" />} label="Usually" cls={BUSY[s.busy].cls}><span className="font-bold">{BUSY[s.busy].l}</span></Tile>
       <p className="col-span-2 text-xs text-muted-foreground">{s.n} ratings{mine ? " · includes yours" : " · illustrative"}</p>
     </div>
   );

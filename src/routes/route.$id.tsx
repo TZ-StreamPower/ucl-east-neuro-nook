@@ -4,15 +4,19 @@ import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-ro
 import { useState } from "react";
 import { ArrowRight, ChevronLeft, Footprints, MessageCircle } from "lucide-react";
 import { Shell, Heading, Sheet, backCls, primaryBtn, secondaryBtn } from "@/components/Shell";
-import { MapCanvas, MapPin } from "@/components/Browse";
+import { RouteMini } from "@/components/RouteMini";
+import { NavMap } from "@/components/NavMap";
+import { MiniMeter } from "@/components/SensoryMeter";
+import { GRAPH, findNode } from "@/data/sensory";
+import { ROUTE_NODES, ILLUSTRATIVE_ROUTE } from "@/data/geo";
 import { SaveShare } from "@/components/SaveShare";
 import { ExpectRows } from "@/components/ExpectRows";
 import { PostCard } from "@/components/PostCard";
 import { GamePractice } from "@/components/GamePractice";
 import { findRoute, ILLUSTRATIVE, VISIT_US, DEFAULT_ROUTE, STARTER_DRAFT } from "@/data/demo";
-import { availableOffline } from "@/lib/logic";
+import { availableOffline, planRoute, routeStats } from "@/lib/logic";
 import { useStore } from "@/lib/store";
-import { allPosts, toCard } from "@/lib/posts";
+import { allPosts, toCard, isMine } from "@/lib/posts";
 import { setStep } from "@/lib/logic";
 import { pageHead } from "@/lib/head";
 type Tab = "overview" | "expect" | "community";
@@ -24,20 +28,25 @@ export const Route = createFileRoute("/route/$id")({
 function Preview() {
   const r = Route.useLoaderData(); const sp = Route.useSearch(); const raw = sp.tab; const gameOpen = sp.game === 1; const tab: Tab = raw === "expect" || raw === "community" ? raw : "overview"; const s = useStore(); const nav = useNavigate();
   const [pin, setPin] = useState<number | null>(null);
+  const rn = ROUTE_NODES[r.id]; const plan = rn ? planRoute(GRAPH, rn.from, rn.to, "calm", s.sensory) : null; const stats = plan ? routeStats(plan.path, s.sensory) : null;
   const resume = s.steps[r.id] !== undefined;
-  const posts = allPosts(s.questions).filter((p) => p.routeId === r.id);
+  const posts = allPosts(s.questions, s.experiences).filter((p) => p.routeId === r.id);
   const closeGame = () => nav({ to: "/route/$id", params: { id: r.id }, search: { tab, game: 0 }, replace: true, resetScroll: false });
   const ask = () => { s.set({ draft: s.draft || STARTER_DRAFT }); nav({ to: "/community/new", search: { from: "practice", route: r.id } }); };
   return (<>
     {gameOpen && <GamePractice onBack={closeGame} onAsk={ask} />}
-    <Shell back={<Link to="/" className={backCls}><ChevronLeft className="size-4" />Campus</Link>}
+    <Shell back={<Link to="/" className={backCls}><ChevronLeft className="size-4" />Explore</Link>}
       footer={<Link to="/route/$id/steps" params={{ id: r.id }} className={primaryBtn}>{resume ? `Resume directions · step ${s.steps[r.id]! + 1}` : "Start directions"} <ArrowRight className="size-4" /></Link>}>
-      <MapCanvas line={r.steps.map((x) => x.landmark.xy)}>
-        {r.steps.map((x, i) => <MapPin key={i} xy={x.landmark.xy} label={`Stop ${i + 1}: ${x.landmark.name}`} active={pin === i} onClick={() => setPin(i)}>{i + 1}</MapPin>)}
-      </MapCanvas>
-      <p className="-mt-2 text-xs text-muted-foreground">Tap a numbered stop for its landmark.</p>
+      <div className="relative overflow-hidden retro rounded-2xl"><RouteMini routeId={r.id} className="aspect-[16/9]" /><span className="sticker absolute left-2 top-2 bg-accent-blue px-2 text-xs font-bold text-primary">Example route</span></div>
       <div><Heading>{r.to}</Heading><p className="text-muted-foreground">From {r.from} · {r.minutes} min walk · <b>Example route</b></p></div>
       <SaveShare item={{ kind: "route", id: r.id }} />
+      {stats && rn && <section aria-label="How it feels along the way" className="space-y-2"><h2 className="font-bold text-primary">How it feels along the way <span className="rounded-full bg-accent px-2 text-xs">Demo ratings</span></h2>
+        <div className="grid grid-cols-3 gap-2 text-center text-primary">
+          <p className="retro rounded-xl bg-card p-2"><span className="block font-display text-2xl font-bold">{stats.calm}</span><span className="text-xs font-bold">Calm of 5</span></p>
+          <p className="retro rounded-xl bg-card p-2"><span className="block font-display text-2xl font-bold">{stats.loud}</span><span className="text-xs font-bold">Loud stops</span></p>
+          <p className="retro rounded-xl bg-card p-2"><span className="block font-display text-2xl font-bold">{stats.crowded}</span><span className="text-xs font-bold">Crowded stops</span></p>
+        </div>
+        <p className="text-sm text-muted-foreground">At {findNode(rn.to)?.name}:</p><MiniMeter s={s.sensory(rn.to)} /></section>}
       {s.offline && !availableOffline(s.saved, { kind: "route", id: r.id }) && <div role="alert" className="retro space-y-1 rounded-xl p-3"><p className="font-bold text-primary">Couldn't load full route details</p><p className="text-sm">This route isn't saved, so it isn't available offline.</p><button className="font-bold text-brand underline" onClick={() => s.set({ offline: false })}>Retry</button></div>}
       {r.id === DEFAULT_ROUTE && <div className="space-y-1 rounded-xl border-2 border-dashed border-primary bg-accent-yellow/40 p-3 text-sm"><p className="font-bold text-primary">Possible change: event day crowds</p><p>On West Ham match days the bridge path can be very busy. Alternative: the riverside path adds about 4 minutes.</p><p className="text-xs text-muted-foreground">Source: illustrative example · updated 17 Nov 2026</p></div>}
       {s.prefs.routePref !== "none" && <p className="text-xs text-muted-foreground">Your preference: {s.prefs.routePref === "step-free" ? "step-free" : "fewer crowds"}. Not verified for this example route.</p>}
@@ -50,7 +59,14 @@ function Preview() {
       <div role="tabpanel" className="space-y-4">
         {tab === "overview" && <>
           <p>{r.summary}</p>
-          <ol className="space-y-2">{r.steps.map((x, i) => <li key={i} className="flex gap-3"><span className="grid size-7 shrink-0 place-items-center rounded-full bg-primary text-xs font-bold text-primary-foreground">{i + 1}</span><span><b className="text-primary">{x.title}.</b> {x.text}</span></li>)}</ol>
+          <ol className="space-y-2">{r.steps.map((x, i) => <li key={i}><button onClick={() => setPin(i)} aria-label={`Stop ${i + 1}: ${x.landmark.name}`} className="flex min-h-11 w-full gap-3 text-left"><span className="grid size-7 shrink-0 place-items-center rounded-full bg-primary text-xs font-bold text-primary-foreground">{i + 1}</span><span><b className="text-primary">{x.title}.</b> {x.text}</span></button></li>)}</ol>
+          {plan && rn && <section className="space-y-2"><h2 className="font-bold text-primary">Map preview</h2>
+            <NavMap path={plan.path} onSelect={() => {}} className="aspect-[16/9]" />
+            <p className="text-xs text-muted-foreground">{ILLUSTRATIVE_ROUTE}</p>
+            <Link to="/navigate" search={{ from: rn.from, to: rn.to, mode: "calm" }} className={secondaryBtn}>Compare calm and quick routes <ArrowRight className="size-4" /></Link></section>}
+          <section className="space-y-2"><h2 className="font-bold text-primary">Community reviews</h2>
+            {posts.length ? <ul className="space-y-3">{posts.slice(0, 2).map((p) => <li key={p.id}><PostCard p={toCard(p, s.replies, isMine(p.id))} from="route" ctx={r.id} /></li>)}</ul> : <p className="text-sm text-muted-foreground">No posts about this route yet.</p>}
+            <Link to="/route/$id" params={{ id: r.id }} search={{ tab: "community", game: 0 }} replace resetScroll={false} className="text-sm font-bold text-primary underline">See all discussion</Link></section>
           <Link to="/route/$id" params={{ id: r.id }} search={{ tab, game: 1 }} resetScroll={false} className="retro flex items-center gap-3 rounded-2xl bg-practice p-3">
             <span className="grid size-12 place-items-center rounded-xl bg-background text-primary"><Footprints className="size-5" /></span>
             <span className="flex-1"><span className="block font-display font-bold text-primary">Practise this arrival</span><span className="block text-sm text-muted-foreground">Optional game · choices stay private</span></span><ArrowRight className="size-4 text-primary" /></Link>
@@ -59,7 +75,7 @@ function Preview() {
         </>}
         {tab === "expect" && <ExpectRows rows={r.expect} />}
         {tab === "community" && <>
-          {posts.length ? <ul className="space-y-3">{posts.map((p) => <li key={p.id}><PostCard p={toCard(p, s.replies, p.id.startsWith("q-"))} from="route" ctx={r.id} /></li>)}</ul> : <p className="text-muted-foreground">No posts about this route yet.</p>}
+          {posts.length ? <ul className="space-y-3">{posts.map((p) => <li key={p.id}><PostCard p={toCard(p, s.replies, isMine(p.id))} from="route" ctx={r.id} /></li>)}</ul> : <p className="text-muted-foreground">No posts about this route yet.</p>}
           <Link to="/community/new" search={{ from: "route", route: r.id }} className={secondaryBtn}><span className="flex items-center gap-2"><MessageCircle className="size-4" />Ask about this route</span><ArrowRight className="size-4" /></Link>
         </>}
       </div>

@@ -29,7 +29,7 @@ export function Shell({ back, title, tabs, practice, children, footer }: {
 
 function Tabs() {
   const { mapView: m } = useStore();
-  const items = [{ to: "/", l: "Campus", I: Compass }, { to: "/navigate", l: "Navigate", I: Navigation }, { to: "/community", l: "Community", I: MessageCircle }, { to: "/saved", l: "Saved", I: Bookmark }] as const;
+  const items = [{ to: "/", l: "Explore", I: Compass }, { to: "/navigate", l: "Navigate", I: Navigation }, { to: "/community", l: "Community", I: MessageCircle }, { to: "/saved", l: "Saved", I: Bookmark }] as const;
   return (
     <nav aria-label="Main" className="pb-safe sticky bottom-0 grid grid-cols-4 border-t-2 border-primary bg-background px-5">
       {items.map(({ to, l, I }) => (

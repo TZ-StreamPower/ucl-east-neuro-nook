@@ -30,3 +30,20 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Playwright
+test-results
+playwright-report
+
+# Local visual checkpoints
+.preview/
+
+# Local handoff and credentials
+/Neuro-Nook-Team-Handoff.zip
+.env
+.env.*
+.dev.vars.*
+*.pem
+*.key
+*.p12
+*.pfx

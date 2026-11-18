@@ -20,3 +20,20 @@ describe("map zoom", () => {
   it("zooming keeps the anchor point fixed", () => { const v = zoomAt({ z: 1, x: 0, y: 0 }, 2, 100, 50); expect((100 - v.x) / v.z).toBe(100); expect((50 - v.y) / v.z).toBe(50); });
   it("zoom is clamped to 1–4", () => { expect(zoomAt({ z: 3, x: 0, y: 0 }, 9, 0, 0).z).toBe(4); expect(zoomAt({ z: 1, x: 0, y: 0 }, 0.2, 0, 0).z).toBe(1); });
 });
+
+import { tagsFromRating, mergeRating, routeStats } from "./logic";
+describe("reflection helpers", () => {
+  it("tags only extreme answers", () => {
+    expect(tagsFromRating({ noise: 1, light: "ok", busy: "busy", calm: 3 })).toEqual(["quiet"]);
+    expect(tagsFromRating({ noise: 5, light: "bright", busy: "full", calm: 1 })).toEqual(["loud", "bright", "crowded", "overwhelming"]);
+    expect(tagsFromRating({})).toEqual([]);
+  });
+  it("merge keeps earlier answers and overrides repeated ones", () => {
+    expect(mergeRating({ noise: 5, calm: 1 }, { noise: 1 })).toEqual({ noise: 1, calm: 1 });
+    expect(mergeRating(undefined, { busy: "free" })).toEqual({ busy: "free" });
+  });
+  it("routeStats counts loud and crowded stops", () => {
+    const get = (id: string) => ({ a: { noise: 5, light: "ok", calm: 1, busy: "full", n: 1 }, b: { noise: 1, light: "ok", calm: 5, busy: "free", n: 1 } } as const)[id as "a" | "b"];
+    expect(routeStats(["a", "b"], get as never)).toEqual({ loud: 1, crowded: 1, calm: 3 });
+  });
+});

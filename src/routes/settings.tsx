@@ -16,7 +16,7 @@ function Toggle({ label, hint, on, set }: { label: string; hint: string; on: boo
 function Settings() {
   const s = useStore(); const p = s.prefs; const up = (x: Partial<Prefs>) => s.set({ prefs: { ...p, ...x } });
   return (
-    <Shell back={<Link to="/" className={backCls}><ChevronLeft className="size-4" />Campus</Link>}>
+    <Shell back={<Link to="/" className={backCls}><ChevronLeft className="size-4" />Explore</Link>}>
       <Heading>Preferences</Heading>
       <p className="-mt-2 text-sm text-muted-foreground">You choose these. Nothing is set for you, and they stay on this device.</p>
       <Toggle label="Sound" hint="Play sounds in Practice and the game" on={p.sound} set={(v) => up({ sound: v })} />

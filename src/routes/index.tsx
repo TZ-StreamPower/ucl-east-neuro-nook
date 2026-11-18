@@ -3,9 +3,11 @@ import { z } from "zod";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Check, Search, List, Map as MapIcon, X, ArrowRight, Footprints } from "lucide-react";
 import { Shell, textLink } from "@/components/Shell";
-import { CAT_STYLE, MapCanvas, MapPin, Thumb } from "@/components/Browse";
+import { CAT_STYLE } from "@/components/Browse";
+import { ExploreGrid, ExploreMap, FeaturedRail } from "@/components/ExploreCards";
+import { Art, artForCat } from "@/components/Art";
+import { RouteMini } from "@/components/RouteMini";
 import { CATS, PLACES, ROUTES, DEFAULT_ROUTE, type Cat } from "@/data/demo";
-import { MiniMeter } from "@/components/SensoryMeter";
 import { matchesFeel, type Feel } from "@/lib/logic";
 import { filterResults, switchView, type ResultItem, type BrowseView } from "@/lib/logic";
 import { GamePractice } from "@/components/GamePractice";
@@ -20,7 +22,7 @@ const ALL: ResultItem[] = [
 const catIds = ["all", ...CATS.map((c) => c.id)];
 export const Route = createFileRoute("/")({
   validateSearch: zodValidator(z.object({ q: fallback(z.string(), "").default(""), cat: fallback(z.string(), "all").default("all"), view: fallback(z.string(), "list").default("list"), sel: fallback(z.string().optional(), undefined), game: fallback(z.number(), 0).default(0), feel: fallback(z.string(), "").default("") })),
-  head: pageHead("Campus · UCL East Community", "Search places and routes around UCL East."), component: Browse });
+  head: pageHead("Explore · UCL East Community", "Search places and routes around UCL East."), component: Browse });
 
 function ItemLink({ i, className, children }: { i: ResultItem; className: string; children: React.ReactNode }) {
   return i.kind === "place"
@@ -37,8 +39,8 @@ function Browse() {
   const sel = results.find((r) => `${r.kind}:${r.id}` === s.sel);
   return (
     <Shell tabs>
-      {s.game === 1 && <GamePractice backLabel="Campus" onBack={() => nav({ search: (p) => ({ ...p, game: 0 }), replace: true, resetScroll: false })} onAsk={() => nav({ to: "/community/new", search: { from: "feed", route: DEFAULT_ROUTE } })} />}
-      <div><h1 className="font-display text-3xl font-bold text-primary">Campus</h1><p className="text-muted-foreground">Your campus, your pace.</p></div>
+      {s.game === 1 && <GamePractice backLabel="Explore" onBack={() => nav({ search: (p) => ({ ...p, game: 0 }), replace: true, resetScroll: false })} onAsk={() => nav({ to: "/community/new", search: { from: "feed", route: DEFAULT_ROUTE } })} />}
+      <div><h1 className="font-display text-3xl font-bold text-primary">Explore</h1><p className="text-muted-foreground">Discover places and routes at your pace.</p></div>
       <label className="flex min-h-12 items-center gap-2 retro rounded-xl bg-card px-4 focus-within:ring-4 focus-within:ring-brand/40">
         <Search className="size-5 text-muted-foreground" aria-hidden="true" />
         <span className="sr-only">Search places and routes</span>
@@ -57,6 +59,7 @@ function Browse() {
           <button key={f} aria-pressed={feel.includes(f)} onClick={() => toggleFeel(f)} className="retro inline-flex min-h-11 shrink-0 items-center rounded-full bg-card px-4 text-sm font-bold text-primary aria-pressed:bg-accent-lime">{l}</button>))}
       </div>
       <GameShowcase cat={s.cat} />
+      {!s.q && s.cat === "all" && !feel.length && <FeaturedRail />}
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground" role="status">{results.length} {results.length === 1 ? "result" : "results"}</p>
         <div role="group" aria-label="View" className="flex rounded-full border border-border p-0.5">
@@ -70,13 +73,11 @@ function Browse() {
           <button className={textLink} onClick={() => upd({ q: "", cat: "all", feel: "" })}>Reset search</button></div>
       ) : s.view === "map" ? (
         <div className="space-y-3">
-          <MapCanvas className="aspect-[4/5]">
-            {results.map((r) => { const { I } = CAT_STYLE[r.cat]; const key = `${r.kind}:${r.id}`; return (
-              <MapPin key={key} xy={r.xy} label={r.name} active={s.sel === key} onClick={() => upd({ sel: key })}><I className="size-4" /></MapPin>); })}
-          </MapCanvas>
+          <ExploreMap items={results} sel={s.sel} onSel={(key) => upd({ sel: key })} />
+          <p className="text-xs text-muted-foreground">Real streets (OpenStreetMap). Pins sit on the host building; dashed edge = approximate. Ratings are demo data.</p>
           {sel ? (
             <div className="flex items-center gap-3 rounded-2xl border-2 border-brand p-3 shadow-md" aria-live="polite">
-              <Thumb cat={sel.cat} route={sel.kind === "route"} className="size-14" />
+              <span className="size-14 shrink-0 overflow-hidden rounded-xl border-2 border-primary">{sel.kind === "route" ? <RouteMini routeId={sel.id} className="size-full" compact /> : <Art kind={artForCat(sel.cat)} photoKey={sel.id} />}</span>
               <div className="min-w-0 flex-1"><p className="font-bold text-primary">{sel.name}</p><p className="text-sm text-muted-foreground">{sel.sub}</p>
                 <ItemLink i={sel} className={textLink}>Open details <ArrowRight className="size-4" /></ItemLink></div>
               <button aria-label="Close" onClick={() => upd({ sel: undefined })} className="grid size-11 place-items-center self-start rounded-full hover:bg-accent"><X className="size-4" /></button>
@@ -84,15 +85,7 @@ function Browse() {
           ) : <p className="text-sm text-muted-foreground">Tap a pin to see the place or route.</p>}
         </div>
       ) : (
-        <ul className="space-y-3">
-          {results.map((r) => { const key = `${r.kind}:${r.id}`; return (
-            <li key={key}><ItemLink i={r} className={`flex items-center gap-3 retro rounded-2xl bg-card p-3 ${s.sel === key ? "ring-2 ring-brand" : ""}`}>
-              <Thumb cat={r.cat} route={r.kind === "route"} className="size-12" />
-              <span className="min-w-0 flex-1"><span className="block text-xs font-bold uppercase tracking-wide text-muted-foreground">{r.kind === "route" ? "Route" : CATS.find((c) => c.id === r.cat)!.label}</span>
-                <span className="block font-bold text-primary">{r.name}</span><span className="block truncate text-sm text-muted-foreground">{r.sub}</span>{r.kind === "place" && <MiniMeter s={store.sensory(r.id)} />}</span>
-              <ArrowRight className="size-4 text-primary" aria-hidden="true" />
-            </ItemLink></li>); })}
-        </ul>
+        <ExploreGrid items={results} selKey={s.sel} />
       )}
       <Link to="/practice" search={{ from: "home", route: DEFAULT_ROUTE }} onClick={() => store.set({ stage: 1, choice: null })} className="retro flex items-center gap-3 rounded-2xl bg-accent-lime p-3">
         <span className="sticker grid size-12 shrink-0 place-items-center bg-card text-primary"><Footprints className="size-5" /></span>

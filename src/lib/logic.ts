@@ -98,3 +98,25 @@ export function zoomAt(v: View, next: number, px: number, py: number): View {
   const z = Math.min(ZMAX, Math.max(ZMIN, next)); const k = z / v.z;
   return { z, x: px - (px - v.x) * k, y: py - (py - v.y) * k };
 }
+
+/** Plain-language exposure summary for a path: loud / crowded stops and average calm. */
+export function routeStats(path: string[], get: (id: string) => Sensory) {
+  const s = path.map(get);
+  return {
+    loud: s.filter((x) => x.noise >= 4).length,
+    crowded: s.filter((x) => x.busy === "full").length,
+    calm: s.length ? r1(s.reduce((a, x) => a + x.calm, 0) / s.length) : 0,
+  };
+}
+
+/** Sticker tags for a reflection (only extreme answers become tags). */
+export function tagsFromRating(r: MyRating): FeedbackKind[] {
+  const t: FeedbackKind[] = [];
+  if (r.noise === 1) t.push("quiet"); else if (r.noise !== undefined && r.noise >= 4) t.push("loud");
+  if (r.light === "dark") t.push("dark"); else if (r.light === "bright") t.push("bright");
+  if (r.busy === "full") t.push("crowded");
+  if (r.calm === 1) t.push("overwhelming"); else if (r.calm !== undefined && r.calm >= 4) t.push("calm");
+  return t;
+}
+/** Merge a reflection into a place's saved rating without dropping earlier answers. */
+export const mergeRating = (prev: MyRating | undefined, next: MyRating): MyRating => ({ ...(prev ?? {}), ...next });

@@ -1,7 +1,8 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { ROUTE_NODES } from "@/data/geo";
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, ChevronLeft, List, LifeBuoy } from "lucide-react";
-import { Shell, Heading, Sheet, backCls, primaryBtn, pill } from "@/components/Shell";
+import { Shell, Heading, Sheet, backCls, primaryBtn, pill, secondaryBtn } from "@/components/Shell";
 import { MapCanvas, MapPin } from "@/components/Browse";
 import { findRoute, VISIT_US } from "@/data/demo";
 import { useStore } from "@/lib/store";
@@ -14,13 +15,15 @@ function Steps() {
   const r = Route.useLoaderData(); const s = useStore();
   const [sheet, setSheet] = useState<"overview" | "help" | null>(null); const [done, setDone] = useState(false);
   const n = r.steps.length; const i = Math.min(s.steps[r.id] ?? 0, n - 1); const st = r.steps[i]!; const last = i === n - 1;
+  const rn = ROUTE_NODES[r.id];
   const go = (k: number) => s.set({ steps: setStep(s.steps, r.id, k) });
   const back = <Link to="/route/$id" params={{ id: r.id }} className={backCls}><ChevronLeft className="size-4" />Route preview</Link>;
   if (done) return (
     <Shell back={back}>
       <Heading>You have arrived at {r.to}</Heading>
       <p>Take your time. This was an example route.</p>
-      <Link to="/route/$id" params={{ id: r.id }} className={primaryBtn}>Back to route preview <ArrowRight className="size-4" /></Link>
+      {rn && <Link to="/reflect" search={{ from: rn.from, to: rn.to, mode: "calm" }} className={primaryBtn}>How did it feel? <ArrowRight className="size-4" /></Link>}
+      <Link to="/route/$id" params={{ id: r.id }} className={secondaryBtn}>Back to route preview <ArrowRight className="size-4" /></Link>
     </Shell>
   );
   return (

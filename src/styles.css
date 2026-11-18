@@ -212,3 +212,12 @@
 .reduce-motion *, .reduce-motion *::before, .reduce-motion *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 html { -webkit-text-size-adjust: 100%; }
 body { font-size: 16px; overflow-x: hidden; }
+
+/* GeoMap (MapLibre) */
+.geo-map .maplibregl-ctrl-group { border: 2px solid var(--primary); border-radius: 0.75rem; box-shadow: 2px 2px 0 var(--primary); }
+.geo-map .maplibregl-ctrl-group button { width: 44px; height: 44px; }
+.geo-map .maplibregl-ctrl-attrib { font-size: 10px; background: rgb(255 255 255 / 0.75); }
+.geo-map .maplibregl-ctrl-attrib.maplibregl-compact { min-height: 22px; margin: 0 4px 4px 0; }
+.geo-map .maplibregl-ctrl-attrib-button { width: 22px; height: 22px; }
+.geo-pin { cursor: pointer; position: relative; }
+.geo-pin-label { position: absolute; top: 100%; white-space: nowrap; border-radius: 4px; background: rgb(255 255 255 / 0.92); padding: 0 4px; font-size: 11px; font-weight: 700; color: var(--primary); }

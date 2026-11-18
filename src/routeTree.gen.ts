@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as NavigateRouteImport } from './routes/navigate'
 import { Route as PracticeRouteImport } from './routes/practice'
+import { Route as ReflectRouteImport } from './routes/reflect'
 import { Route as SavedRouteImport } from './routes/saved'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as CommunityIndexRouteImport } from './routes/community.index'
@@ -38,6 +39,11 @@ const NavigateRoute = NavigateRouteImport.update({
 const PracticeRoute = PracticeRouteImport.update({
   id: '/practice',
   path: '/practice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReflectRoute = ReflectRouteImport.update({
+  id: '/reflect',
+  path: '/reflect',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SavedRoute = SavedRouteImport.update({
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/navigate': typeof NavigateRoute
   '/practice': typeof PracticeRoute
+  '/reflect': typeof ReflectRoute
   '/saved': typeof SavedRoute
   '/settings': typeof SettingsRoute
   '/community/$id': typeof CommunityIdRoute
@@ -122,6 +129,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/navigate': typeof NavigateRoute
   '/practice': typeof PracticeRoute
+  '/reflect': typeof ReflectRoute
   '/saved': typeof SavedRoute
   '/settings': typeof SettingsRoute
   '/community/$id': typeof CommunityIdRoute
@@ -140,6 +148,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/navigate': typeof NavigateRoute
   '/practice': typeof PracticeRoute
+  '/reflect': typeof ReflectRoute
   '/saved': typeof SavedRoute
   '/settings': typeof SettingsRoute
   '/community/$id': typeof CommunityIdRoute
@@ -159,6 +168,7 @@ export interface FileRouteTypes {
     | '/'
     | '/navigate'
     | '/practice'
+    | '/reflect'
     | '/saved'
     | '/settings'
     | '/community/$id'
@@ -176,6 +186,7 @@ export interface FileRouteTypes {
     | '/'
     | '/navigate'
     | '/practice'
+    | '/reflect'
     | '/saved'
     | '/settings'
     | '/community/$id'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/'
     | '/navigate'
     | '/practice'
+    | '/reflect'
     | '/saved'
     | '/settings'
     | '/community/$id'
@@ -211,6 +223,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   NavigateRoute: typeof NavigateRoute
   PracticeRoute: typeof PracticeRoute
+  ReflectRoute: typeof ReflectRoute
   SavedRoute: typeof SavedRoute
   SettingsRoute: typeof SettingsRoute
   CommunityIdRoute: typeof CommunityIdRoute
@@ -246,6 +259,13 @@ declare module '@tanstack/react-router' {
       path: '/practice'
       fullPath: '/practice'
       preLoaderRoute: typeof PracticeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reflect': {
+      id: '/reflect'
+      path: '/reflect'
+      fullPath: '/reflect'
+      preLoaderRoute: typeof ReflectRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/saved': {
@@ -339,6 +359,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   NavigateRoute: NavigateRoute,
   PracticeRoute: PracticeRoute,
+  ReflectRoute: ReflectRoute,
   SavedRoute: SavedRoute,
   SettingsRoute: SettingsRoute,
   CommunityIdRoute: CommunityIdRoute,

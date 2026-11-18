@@ -16,7 +16,7 @@ export const Route = createFileRoute("/community/$id")({
 function ThreadPage() {
   const { id } = Route.useParams(); const { from: f, ref } = Route.useSearch(); const from: ThreadFrom = f === "route" || f === "place" ? f : "feed"; const s = useStore();
   const [mode, setMode] = useState<"idle" | "edit" | "preview">("idle"); const [text, setText] = useState(""); const [confirm, setConfirm] = useState(false); const [err, setErr] = useState(false); const [report, setReport] = useState(false);
-  const t = allPosts(s.questions).find((p) => p.id === id);
+  const t = allPosts(s.questions, s.experiences).find((p) => p.id === id);
   const b = threadBack(from, ref);
   const back = b.kind === "route" ? <Link to="/route/$id" params={{ id: b.id }} search={{ tab: "community" }} className={backCls}><ChevronLeft className="size-4" />{findRoute(b.id)?.to ?? "Route"}</Link>
     : b.kind === "place" ? <Link to="/place/$id" params={{ id: b.id }} className={backCls}><ChevronLeft className="size-4" />{findPlace(b.id)?.name ?? "Place"}</Link>

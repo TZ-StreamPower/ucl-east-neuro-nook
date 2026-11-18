@@ -10,7 +10,7 @@ import { pageHead } from "@/lib/head";
 export const Route = createFileRoute("/saved")({ head: pageHead("Saved · UCL East Community", "Your saved places, routes and posts."), component: Saved });
 const card = "flex flex-1 items-center gap-3 p-3";
 function Saved() {
-  const s = useStore(); const posts = allPosts(s.questions);
+  const s = useStore(); const posts = allPosts(s.questions, s.experiences);
   return (
     <Shell tabs title="Saved">
       <Heading>Saved</Heading>

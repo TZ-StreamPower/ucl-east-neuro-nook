@@ -78,7 +78,12 @@ export const CHOICES: { id: ChoiceId; label: string; full: string; feedback: str
 export const STARTER_DRAFT = "What helps you find your bearings on this route?";
 export const ILLUSTRATIVE = "Illustrative · not yet field-checked";
 
-export type Post = { id: string; kind: "Question" | "Tip"; title: string; routeId?: string; placeId?: string; replies: string[] };
+import type { FeedbackKind } from "@/lib/logic";
+export type PostKind = "Question" | "Tip" | "Experience" | "Review";
+export type Post = {
+  id: string; kind: PostKind; title: string; routeId?: string; placeId?: string; replies: string[];
+  art?: string; tags?: FeedbackKind[]; ratings?: { noise: number; calm: number }; author?: string; demo?: boolean;
+};
 export const POSTS: Post[] = [
   { id: "station-exit", kind: "Question", title: "Which station exit should I look for?", routeId: "stratford-marshgate", replies: ["Check the exit name and the next landmark in your route preview before leaving the station."] },
   { id: "bridge-tip", kind: "Tip", title: "The footbridge is a good place to check you are on track", routeId: "stratford-marshgate", replies: ["Agreed, I pause at the start of it and look for Marshgate ahead.", "There are fewer people there in the morning too."] },
@@ -86,6 +91,12 @@ export const POSTS: Post[] = [
   { id: "cafe-quiet", kind: "Tip", title: "The café is calmer after 2pm", placeId: "marshgate-cafe", replies: [] },
   { id: "poolstreet-door", kind: "Question", title: "Is the One Pool Street door step-free?", routeId: "intl-poolstreet", placeId: "one-pool-street", replies: ["Yes, the main door is step-free with a wide canopy."] },
   { id: "quiet-room", kind: "Question", title: "Do I need to book the quiet study room?", placeId: "quiet-room", replies: ["Not in this demo. Check signs on the door."] },
+  // Demonstration content only: written by the team to show the layouts, not student testimonials.
+  { id: "rev-intl", kind: "Review", title: "Quiet start from Stratford International", routeId: "intl-poolstreet", ratings: { noise: 2, calm: 4 }, author: "Demo user", demo: true, replies: [] },
+  { id: "exp-cafe", kind: "Experience", title: "Window seats were quiet in the afternoon", placeId: "marshgate-cafe", art: "cafe", tags: ["quiet", "calm"], author: "Demo user", demo: true, replies: [] },
+  { id: "rev-stratford-marshgate", kind: "Review", title: "A few minutes longer, but much quieter than the plaza", routeId: "stratford-marshgate", ratings: { noise: 2, calm: 4 }, author: "Demo user", demo: true, replies: [] },
+  { id: "exp-river", kind: "Experience", title: "River side felt calmer than the plaza", routeId: "stratford-marshgate", placeId: "marshgate", art: "water", tags: ["quiet", "calm"], author: "Demo user", demo: true, replies: ["Demo reply: the bench near the water is a good place to pause."] },
+  { id: "exp-reflection", kind: "Experience", title: "Low light and soft seating helped me reset", placeId: "reflection-room", art: "quiet", tags: ["dark", "calm"], author: "Demo user", demo: true, replies: [] },
 ];
 export const postContext = (p: { routeId?: string; placeId?: string }) =>
   (p.routeId && findRoute(p.routeId)?.name) || (p.placeId && findPlace(p.placeId)?.name) || "UCL East";

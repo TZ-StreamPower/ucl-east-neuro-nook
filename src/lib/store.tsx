@@ -1,11 +1,11 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { addQuestion, parseJSON, DEFAULT_PREFS, type Question, type SavedRef, type Prefs, type KeptDraft, type MyRating, type FeedbackKind, type Sensory, combineRating } from "./logic";
-import type { ChoiceId } from "@/data/demo";
+import type { ChoiceId, Post } from "@/data/demo";
 import { SEED, DEFAULT_SENSORY } from "@/data/sensory";
 export type WalkFb = { id: string; k: FeedbackKind };
 
-type S = { saved: SavedRef[]; questions: Question[]; replies: Record<string, string[]>; steps: Record<string, number>; draft: string; choice: ChoiceId | null; stage: 1 | 2 | 3; prefs: Prefs; kept: KeptDraft; reports: string[]; offline: boolean; ratings: Record<string, MyRating>; walkFb: WalkFb[]; mapView: { z: number; x: number; y: number; pin: string | null; from?: string; to?: string; mode?: string } };
-const init: S = { saved: [], questions: [], replies: {}, steps: {}, draft: "", choice: null, stage: 1, prefs: DEFAULT_PREFS, kept: null, reports: [], offline: false, ratings: {}, walkFb: [], mapView: { z: 1, x: 0, y: 0, pin: null } };
+type S = { experiences: Post[]; saved: SavedRef[]; questions: Question[]; replies: Record<string, string[]>; steps: Record<string, number>; draft: string; choice: ChoiceId | null; stage: 1 | 2 | 3; prefs: Prefs; kept: KeptDraft; reports: string[]; offline: boolean; ratings: Record<string, MyRating>; walkFb: WalkFb[]; mapView: { z: number; x: number; y: number; pin: string | null; from?: string; to?: string; mode?: string } };
+const init: S = { experiences: [], saved: [], questions: [], replies: {}, steps: {}, draft: "", choice: null, stage: 1, prefs: DEFAULT_PREFS, kept: null, reports: [], offline: false, ratings: {}, walkFb: [], mapView: { z: 1, x: 0, y: 0, pin: null } };
 type Ctx = S & { set: (p: Partial<S>) => void; publish: (t: string, routeId: string) => string; reply: (postId: string, t: string) => void; sensory: (id: string) => Sensory };
 const C = createContext<Ctx | null>(null);
 
@@ -15,13 +15,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const local = parseJSON<Partial<S>>(localStorage.getItem("ucl-local-v2"), {});
     const sess = parseJSON<Partial<S>>(sessionStorage.getItem("ucl-session-v2"), {});
-    setS((p) => ({ ...p, ...sess, ...local, saved: Array.isArray(local.saved) ? local.saved : [], prefs: { ...DEFAULT_PREFS, ...(local.prefs ?? {}) }, reports: Array.isArray(local.reports) ? local.reports : [], ratings: local.ratings && typeof local.ratings === "object" ? local.ratings : {}, walkFb: Array.isArray(local.walkFb) ? local.walkFb : [] }));
+    setS((p) => ({ ...p, ...sess, ...local, saved: Array.isArray(local.saved) ? local.saved : [], prefs: { ...DEFAULT_PREFS, ...(local.prefs ?? {}) }, experiences: Array.isArray(local.experiences) ? local.experiences : [], reports: Array.isArray(local.reports) ? local.reports : [], ratings: local.ratings && typeof local.ratings === "object" ? local.ratings : {}, walkFb: Array.isArray(local.walkFb) ? local.walkFb : [] }));
     setReady(true);
   }, []);
   useEffect(() => {
     if (!ready) return;
-    const { saved, questions, replies, steps, draft, choice, stage, prefs, kept, reports, offline, ratings, walkFb, mapView } = s;
-    localStorage.setItem("ucl-local-v2", JSON.stringify({ saved, questions, replies, prefs, kept, reports, ratings, walkFb }));
+    const { experiences, saved, questions, replies, steps, draft, choice, stage, prefs, kept, reports, offline, ratings, walkFb, mapView } = s;
+    localStorage.setItem("ucl-local-v2", JSON.stringify({ experiences, saved, questions, replies, prefs, kept, reports, ratings, walkFb }));
     sessionStorage.setItem("ucl-session-v2", JSON.stringify({ steps, draft, choice, stage, offline, mapView }));
     document.documentElement.classList.toggle("reduce-motion", prefs.reduceMotion);
   }, [s, ready]);
